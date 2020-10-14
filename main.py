@@ -2,13 +2,6 @@ import ply.lex as lex
 import sys
 tokens = ('IDENT', 'OP_ARIT', 'DELIM', 'CTE_REAL')
 
-# the next lines are how the regular expresions should be made
-
-'''t_IDENT = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_OP_ARIT = r'\[+-*/%^]'
-t_CTE_REAL = r'[1-9][0-9]*'
-t_DELIM = r'[();[]:]'''
-
 
 # when finding new line /n
 def t_newline(t):
@@ -21,8 +14,20 @@ def t_IDENT(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     print("IDENT " + t.value)
 
+def t_CTE_REAL(t):
+    r'[1-9][0-9]*'
+    print("CTE-REAL " + t.value)
+
+def t_DELIM(t):
+    r'[)(;\]\[]'
+    print("DELIM " + t.value)
+
+def t_OP_ARIT(t):
+    r'[+*/%^-]'
+    print("OP-ARIT " + t.value)
+
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    #print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
 lex_= lex.lex()
