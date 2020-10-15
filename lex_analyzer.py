@@ -17,7 +17,7 @@ class Lexer(object):
     # the following functions are code to do when finding some token
 
     def t_CTE_ALFA(self, t):
-        r'[\"][.]+[\"]'
+        r'"[a-zA-Z0-9_ \[\])(=<:!¡\¿\?,]*"'
         print("CADENA " + t.value)
 
     def t_PAL_RES(self, t):
@@ -26,7 +26,7 @@ class Lexer(object):
         print("RESERVADA " + t.value)
 
     def t_OP_LOG(self, t):
-        r'[y|o|no]'
+        r'y|o|no'
         print("LOGICO " + t.value)
 
     def t_IDENT(self, t):
