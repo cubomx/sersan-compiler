@@ -6,6 +6,8 @@ variables i, j, k, n, vector[MAX], matriz[MAX][MAX]:Entero;
           Alfa, Beta:Alfabetico;
           Log1, Log2:Logico;
 
+          y no o
+
 Funcion FacRec(n:Entero):Entero;
 Funcion FacIter(n:Entero):Entero;
 Procedimiento LeeVec(k:Entero);
@@ -85,7 +87,7 @@ Procedimiento Test()
 Inicio
    Desde el valor de i:= 1 hasta 10
    Inicio
-     Si (i=5) hacer continua;
+     Si (i=5)  hacer continua;
      Imprimenl("i= ", i);
    Fin;
    i:=1;
