@@ -2,7 +2,7 @@ import ply.lex as lex
 
 
 class Lexer(object):
-    tokens = ('IDENT', 'OP_ARIT', 'DELIM', 'CTE_REAL', 'OP_LOG', 'CTE_ALFA', 'PAL_RES')
+    tokens = ('IDENT', 'OP_ARIT', 'DELIM', 'CTE_REAL', 'OP_LOG', 'CTE_ALFA', 'PAL_RES', 'OP_REL', 'CTE_ENTERA')
     reserved = ('constantes', 'variables', 'real', 'alfabetico', 'logico', 'entero', 'funcion',
                 'inicio', 'fin', 'de', 'procedimiento', 'regresa', 'si', 'hacer', 'sino',
                 'cuando', 'el', 'valor', 'sea', 'otro', 'desde', 'hasta', 'incr', 'decr',
@@ -21,9 +21,15 @@ class Lexer(object):
         print("CADENA " + t.value)
 
     def t_PAL_RES(self, t):
-        r'constantes|variables|real|alfabetico|logico|entero|funcion|inicio|fin|de|procedimiento|regresa|si|hacer|sino|cuando'\
-        '|el|valor|sea|otro|desde|hasta|incr|decr|repetir|que|mientras|se|cumpla|continua|interrumpe|limpia|lee|imprime|imprimenl'
+        r'[c|C]onstantes|[V|v]ariables|[R|r]eal|[a|A]lfabetico|[l|L]ogico|[e|E]ntero|[f|F]uncion|[i|I]nicio|[f|F]in|[d|D]e'\
+        '|[p|P]rocedimiento|[r|R]egresa|[s|S]i|[h|H]acer|[s|S]ino|[c|C]uando|[e|E]l|[v|V]alor|[s|S]ea|[o|O]tro|[d|D]esde|[h|H]asta'\
+        '|[i|I]ncr|[d|D]ecr|[r|R]epetir|[q|Q]ue|[m|M]ientras|[S|s]e(?![a-zA-Z0-9_])|[c|C]umpla|[c|C]ontinua|[i|I]nterrumpe|[l|L]impia|[l|L]ee|'\
+        '[i|I]mprimenl|[i|I]mprime'
         print("RESERVADA " + t.value)
+
+    def t_OP_REL(self, t):
+        r'=|<>|<|>|<=|>='
+        print("RELACIONAL " + t.value)
 
     def t_OP_LOG(self, t):
         r'y|o|no'
@@ -34,18 +40,27 @@ class Lexer(object):
         print("IDENT " + t.value)
 
     def t_CTE_REAL(self, t):
-        r'[1-9][0-9]*'
+        r'[1-9][\.][0-9]*'
         print("CTE-REAL " + t.value)
 
+    def t_CTE_ENTERA(self, t):
+        r'[1-9][0-9]*'
+        print("CTE-ENTERA " + t.value)
+
+    def t_OP_ASIG(self, t):
+        r':='
+        print("ASIGNACION " + t.value)
 
     def t_DELIM(self, t):
-        r'[)(;\]\[]'
+        r'[)(;\]\[:\.,]'
         print("DELIM " + t.value)
 
 
     def t_OP_ARIT(self, t):
-        r'[+*/%^-]'
+        r'[\+\*/%/\^-]'
         print("OP-ARIT " + t.value)
+
+
 
 
 

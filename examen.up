@@ -42,6 +42,8 @@ Inicio
       regresa(FacRec(n-1)*n);
 Fin de Funcion;
 
+se
+
 Funcion FacIter(n:Entero):Entero
 Variables Facto:Entero;
 Inicio
