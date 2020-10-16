@@ -21,10 +21,12 @@ class Lexer(object):
         print("CADENA " + t.value)
 
     def t_PAL_RES(self, t):
-        r'[c|C]onstantes|[V|v]ariables|[R|r]eal|[a|A]lfabetico|[l|L]ogico|[e|E]ntero|[f|F]uncion|[i|I]nicio|[f|F]in|[d|D]e'\
-        '|[p|P]rocedimiento|[r|R]egresa|[s|S]i|[h|H]acer|[s|S]ino|[c|C]uando|[e|E]l|[v|V]alor|[s|S]ea|[o|O]tro|[d|D]esde|[h|H]asta'\
-        '|[i|I]ncr|[d|D]ecr|[r|R]epetir|[q|Q]ue|[m|M]ientras|[S|s]e(?![a-zA-Z0-9_])|[c|C]umpla|[c|C]ontinua|[i|I]nterrumpe|[l|L]impia|[l|L]ee|'\
-        '[i|I]mprimenl|[i|I]mprime'
+        r'[c|C]onstantes(?![\S])|[V|v]ariables(?![\S])|[R|r]eal(?![\S])|[a|A]lfabetico(?![\s])|[l|L]ogico(?![\S])|[e|E]ntero(?![\s])'\
+        '|[f|F]uncion(?![\S])|[i|I]nicio(?![\S])|[f|F]in(?![\S])|[d|D]e(?![\S])|[p|P]rocedimiento(?![\S])|[r|R]egresa(?![\S])|[s|S]i(?![\S])'\
+        '|[h|H]acer(?![\S])|[s|S]ino(?![\S])|[c|C]uando(?![\S])|[e|E]l(?![\S])|[v|V]alor(?![\S])|[s|S]ea(?![\S])|[o|O]tro(?![\S])|[d|D]esde(?![\S])'\
+        '|[h|H]asta(?![\S])|[i|I]ncr(?![\S])|[d|D]ecr(?![\S])|[r|R]epetir(?![\S])|[q|Q]ue(?![\S])|[m|M]ientras(?![\S])|[S|s]e(?![\S])|[c|C]umpla(?![\S])'\
+        '|[c|C]ontinua(?![\S])|[i|I]nterrumpe(?![\S])|[l|L]impia(?![\S])|[l|L]ee(?![^\(\s])|'\
+        '[i|I]mprimenl(?![^\("\s])|[i|I]mprime(?![^\("\s])'
         print("RESERVADA " + t.value)
 
     def t_OP_REL(self, t):
