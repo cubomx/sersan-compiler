@@ -4,9 +4,7 @@ constantes PI:=3.141592;
 variables i, j, k, n, vector[MAX], matriz[MAX][MAX]:Entero;
           r, s, t:real;
           Alfa, Beta:Alfabetico;
-          Log1, Log2:Logico;
-
-          y no o
+          Log1, Log2:Logicos;
 
 Funcion FacRec(n:Entero):Entero;
 Funcion FacIter(n:Entero):Entero;
@@ -41,8 +39,6 @@ Inicio
    sino
       regresa(FacRec(n-1)*n);
 Fin de Funcion;
-
-se
 
 Funcion FacIter(n:Entero):Entero
 Variables Facto:Entero;
