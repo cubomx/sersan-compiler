@@ -20,5 +20,5 @@ else:
             if not tok:
                 break
 
-lex_.show_lex_cmp()
+#lex_.show_lex_cmp()
 lex_.close_file()

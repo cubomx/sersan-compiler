@@ -3,11 +3,13 @@ import ply.lex as lex
 
 class Lexer(object):
     tokens = (
-    'IDENT', 'OP_ARIT', 'DELIM', 'CTE_REAL', 'OP_LOG', 'CTE_ALFA', 'PAL_RES', 'OP_REL', 'CTE_ENTERA', 'COMMENT')
+    'IDENT', 'OP_ARIT', 'DELIM', 'CTE_REAL', 'OP_LOG', 'CTE_ALFA', 'PAL_RES', 'OP_REL', 'CTE_ENTERA', 'COMMENT', 'CTE_REAL_NON_NUM',
+    'CTE_REAL_ENDING_BAD', 'CTE_ENTERA_NON_NUM')
     lexemas = dict()
 
     def __init__(self, filename):
         self.file_name = filename
+        open(self.file_name, 'w').close()
         self.output_file = open(self.file_name, "a")
 
     # when finding new line /n
@@ -18,7 +20,7 @@ class Lexer(object):
     # the following functions are code to do when finding some token
 
     def t_COMMENT(self, t):
-        r'//[.]'
+        r'//[.]*'
         if not t.value in self.lexemas:
             self.lexemas[t.value] = "COMENTARIO"
             self.add_lex("COMENTARIO", t.value)
@@ -46,6 +48,7 @@ class Lexer(object):
             self.lexemas[t.value] = "OP-REL"
             self.add_lex("OP-REL", t.value)
 
+
     def t_OP_LOG(self, t):
         r'y(?![\S])|o(?![\S])|no(?![\S])'
         if not t.value in self.lexemas:
@@ -59,16 +62,29 @@ class Lexer(object):
             self.add_lex("IDENT", t.value)
 
     def t_CTE_REAL(self, t):
-        r'[1-9][\.][0-9]*'
+        r'[0-9][\.][0-9]+(?![a-zA-Z_]+)'
         if not t.value in self.lexemas:
             self.lexemas[t.value] = "CTE-REAL"
             self.add_lex("CTE-REAL", t.value)
 
+    def t_ignore_CTE_REAL_NON_NUM(self, t):
+        r'[1-9][\.][a-zA-Z0-9]+'
+        print("ERROR: Decimal points contains non number values " + t.value)
+
+    def t_ignore_CTE_REAL_ENDING_BAD(self, t):
+        r'[1-9][\.](?![ \s^a-zA-Z0-9])'
+        print("ERROR: Not number after point " + t.value)
+
+
     def t_CTE_ENTERA(self, t):
-        r'[1-9][0-9]*'
+        r'[1-9][0-9]*(?![a-zA-Z$\#\?])'
         if not t.value in self.lexemas:
             self.lexemas[t.value] = "CTE-ALFA"
             self.add_lex("CTE-ALFA", t.value)
+
+    def t_CTE_ENTERA_NON_NUM(self, t):
+        r'[1-9][0-9]*[a-zA-Z$\#\?]+'
+        print("ERROR: Unknowm character for integer value")
 
     def t_OP_ASIG(self, t):
         r':='

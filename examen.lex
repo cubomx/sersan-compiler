@@ -40,7 +40,7 @@
 <IDENT> : ImpMat
 <IDENT> : MulMat
 <IDENT> : v
-<OP-ARIT> : /
+<COMENTARIO> : //
 <IDENT> : Selecciona
 <PAL-RES> : Inicio
 <PAL-RES> : Repetir
