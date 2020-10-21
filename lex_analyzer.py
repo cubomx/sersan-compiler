@@ -9,8 +9,10 @@ class Lexer(object):
 
     def __init__(self, filename):
         self.file_name = filename
-        open(self.file_name, 'w').close()
-        self.output_file = open(self.file_name, "a")
+        open(self.file_name + ".lex", 'w').close()
+        open(self.file_name + ".err", 'w').close()
+        self.output_file = open(self.file_name + ".lex", "a")
+        self.err_file = open(self.file_name + ".err", "a")
 
     # when finding new line /n
     def t_newline(self, t):
@@ -48,7 +50,6 @@ class Lexer(object):
             self.lexemas[t.value] = "OP-REL"
             self.add_lex("OP-REL", t.value)
 
-
     def t_OP_LOG(self, t):
         r'y(?![\S])|o(?![\S])|no(?![\S])'
         if not t.value in self.lexemas:
@@ -69,12 +70,11 @@ class Lexer(object):
 
     def t_ignore_CTE_REAL_NON_NUM(self, t):
         r'[1-9][\.][a-zA-Z0-9]+'
-        print("ERROR: Decimal points contains non number values " + t.value)
+        self.add_err("Decimal points contains non number values", t.value, t.lexer.lineno)
 
     def t_ignore_CTE_REAL_ENDING_BAD(self, t):
         r'[1-9][\.](?![ \s^a-zA-Z0-9])'
-        print("ERROR: Not number after point " + t.value)
-
+        self.add_err("Not number after point", t.value, t.lexer.lineno)
 
     def t_CTE_ENTERA(self, t):
         r'[1-9][0-9]*(?![a-zA-Z$\#\?])'
@@ -84,7 +84,7 @@ class Lexer(object):
 
     def t_CTE_ENTERA_NON_NUM(self, t):
         r'[1-9][0-9]*[a-zA-Z$\#\?]+'
-        print("ERROR: Unknowm character for integer value")
+        self.add_err("Unknown character for integer value", t.value, t.lexer.lineno)
 
     def t_OP_ASIG(self, t):
         r':='
@@ -105,21 +105,25 @@ class Lexer(object):
             self.add_lex("OP-ARIT", t.value)
 
     def t_error(self, t):
-        if t.value[0] == " ":
-            print("Illegal character '%s'" % t.value[0])
         t.lexer.skip(1)
 
     def build_lex(self, **kwargs):
         self.lex = lex.lex(module=self, **kwargs)
 
-
     def show_lex_cmp(self):
         for value, lex_cmp in self.lexemas.items():
             print('<{0}> : {1}'.format(lex_cmp, value))
 
+    # Append to the .lex file the lex components and their values
     def add_lex(self, lex_cmp, value):
         if self.file_name != "":
             self.output_file.write("<" + lex_cmp + "> : " + value + "\n")
 
+    # Append to the .err file the errors that may be found
+    def add_err(self, lex_error, val, line):
+        self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
+
+    # Close the files to prevent further errors when reopening
     def close_file(self):
         self.output_file.close()
+        self.err_file.close()

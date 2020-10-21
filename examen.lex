@@ -1,10 +1,8 @@
 <PAL-RES> : constantes
 <IDENT> : PI
 <OP-ASIG> : :=
-<CTE-REAL> : 3.141592
 <DELIM> : ;
 <IDENT> : MAX
-<CTE-ALFA> : 30
 <PAL-RES> : variables
 <IDENT> : i
 <DELIM> : ,

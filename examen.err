@@ -1,0 +1,2 @@
+err: Decimal points contains non number values[3.e141592] in line 1
+err: Unknown character for integer value[3a] in line 2
