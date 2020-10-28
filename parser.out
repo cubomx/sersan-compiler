@@ -1,395 +1,166 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    COMA
+    COMMENT
+    CORCHETE_EMPIEZA
+    CORCHETE_TERMINA
+    CTE_ALFA
+    CTE_ENTERA_NON_NUM
+    CTE_REAL_ENDING_BAD
+    CTE_REAL_NON_NUM
+    OP_ARIT
+    OP_LOG
+    OP_REL
+    PAL_RES
+    PAREN_EMPIEZA
+    PAREN_TERMINA
+    PUNTO
+    PUNTOS_DOBLES
+    TIPO
+    VARIABLES
+
 Grammar
 
-Rule 0     S' -> statement
-Rule 1     statement -> NAME EQUALS expression
-Rule 2     statement -> expression
-Rule 3     expression -> expression PLUS expression
-Rule 4     expression -> expression MINUS expression
-Rule 5     expression -> expression TIMES expression
-Rule 6     expression -> expression DIVIDE expression
-Rule 7     expression -> MINUS expression
-Rule 8     expression -> LPAREN expression RPAREN
-Rule 9     expression -> NUMBER
-Rule 10    expression -> NAME
+Rule 0     S' -> constantes
+Rule 1     constantes -> CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA gpoconst
+Rule 2     cantidad -> CTE_ENTERA
+Rule 3     cantidad -> CTE_REAL
+Rule 4     gpoconst -> constantes
+Rule 5     gpoconst -> empty
+Rule 6     empty -> <empty>
 
 Terminals, with rules where they appear
 
-DIVIDE               : 6
-EQUALS               : 1
-LPAREN               : 8
-MINUS                : 4 7
-NAME                 : 1 10
-NUMBER               : 9
-PLUS                 : 3
-RPAREN               : 8
-TIMES                : 5
+COMA                 : 
+COMMENT              : 
+CONSTANTES           : 1
+CORCHETE_EMPIEZA     : 
+CORCHETE_TERMINA     : 
+CTE_ALFA             : 
+CTE_ENTERA           : 2
+CTE_ENTERA_NON_NUM   : 
+CTE_REAL             : 3
+CTE_REAL_ENDING_BAD  : 
+CTE_REAL_NON_NUM     : 
+IDENT                : 1
+OP_ARIT              : 
+OP_ASIG              : 1
+OP_LOG               : 
+OP_REL               : 
+PAL_RES              : 
+PAREN_EMPIEZA        : 
+PAREN_TERMINA        : 
+PUNTO                : 
+PUNTOS_DOBLES        : 
+PUNTO_COMA           : 1
+TIPO                 : 
+VARIABLES            : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 1 2 3 3 4 4 5 5 6 6 7 8
-statement            : 0
+cantidad             : 1
+constantes           : 4 0
+empty                : 5
+gpoconst             : 1
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . statement
-    (1) statement -> . NAME EQUALS expression
-    (2) statement -> . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (0) S' -> . constantes
+    (1) constantes -> . CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA gpoconst
 
-    NAME            shift and go to state 2
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
+    CONSTANTES      shift and go to state 2
 
-    statement                      shift and go to state 1
-    expression                     shift and go to state 3
+    constantes                     shift and go to state 1
 
 state 1
 
-    (0) S' -> statement .
+    (0) S' -> constantes .
 
 
 
 state 2
 
-    (1) statement -> NAME . EQUALS expression
-    (10) expression -> NAME .
+    (1) constantes -> CONSTANTES . IDENT OP_ASIG cantidad PUNTO_COMA gpoconst
 
-    EQUALS          shift and go to state 7
-    PLUS            reduce using rule 10 (expression -> NAME .)
-    MINUS           reduce using rule 10 (expression -> NAME .)
-    TIMES           reduce using rule 10 (expression -> NAME .)
-    DIVIDE          reduce using rule 10 (expression -> NAME .)
-    $end            reduce using rule 10 (expression -> NAME .)
+    IDENT           shift and go to state 3
 
 
 state 3
 
-    (2) statement -> expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
+    (1) constantes -> CONSTANTES IDENT . OP_ASIG cantidad PUNTO_COMA gpoconst
 
-    $end            reduce using rule 2 (statement -> expression .)
-    PLUS            shift and go to state 8
-    MINUS           shift and go to state 9
-    TIMES           shift and go to state 10
-    DIVIDE          shift and go to state 11
+    OP_ASIG         shift and go to state 4
 
 
 state 4
 
-    (7) expression -> MINUS . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) constantes -> CONSTANTES IDENT OP_ASIG . cantidad PUNTO_COMA gpoconst
+    (2) cantidad -> . CTE_ENTERA
+    (3) cantidad -> . CTE_REAL
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    CTE_ENTERA      shift and go to state 6
+    CTE_REAL        shift and go to state 7
 
-    expression                     shift and go to state 12
+    cantidad                       shift and go to state 5
 
 state 5
 
-    (8) expression -> LPAREN . expression RPAREN
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) constantes -> CONSTANTES IDENT OP_ASIG cantidad . PUNTO_COMA gpoconst
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    PUNTO_COMA      shift and go to state 8
 
-    expression                     shift and go to state 14
 
 state 6
 
-    (9) expression -> NUMBER .
+    (2) cantidad -> CTE_ENTERA .
 
-    PLUS            reduce using rule 9 (expression -> NUMBER .)
-    MINUS           reduce using rule 9 (expression -> NUMBER .)
-    TIMES           reduce using rule 9 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 9 (expression -> NUMBER .)
-    $end            reduce using rule 9 (expression -> NUMBER .)
-    RPAREN          reduce using rule 9 (expression -> NUMBER .)
+    PUNTO_COMA      reduce using rule 2 (cantidad -> CTE_ENTERA .)
 
 
 state 7
 
-    (1) statement -> NAME EQUALS . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (3) cantidad -> CTE_REAL .
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    PUNTO_COMA      reduce using rule 3 (cantidad -> CTE_REAL .)
 
-    expression                     shift and go to state 15
 
 state 8
 
-    (3) expression -> expression PLUS . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) constantes -> CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA . gpoconst
+    (4) gpoconst -> . constantes
+    (5) gpoconst -> . empty
+    (1) constantes -> . CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA gpoconst
+    (6) empty -> .
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    CONSTANTES      shift and go to state 2
+    $end            reduce using rule 6 (empty -> .)
 
-    expression                     shift and go to state 16
+    gpoconst                       shift and go to state 9
+    constantes                     shift and go to state 10
+    empty                          shift and go to state 11
 
 state 9
 
-    (4) expression -> expression MINUS . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) constantes -> CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA gpoconst .
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    $end            reduce using rule 1 (constantes -> CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA gpoconst .)
 
-    expression                     shift and go to state 17
 
 state 10
 
-    (5) expression -> expression TIMES . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (4) gpoconst -> constantes .
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
+    $end            reduce using rule 4 (gpoconst -> constantes .)
 
-    expression                     shift and go to state 18
 
 state 11
 
-    (6) expression -> expression DIVIDE . expression
-    (3) expression -> . expression PLUS expression
-    (4) expression -> . expression MINUS expression
-    (5) expression -> . expression TIMES expression
-    (6) expression -> . expression DIVIDE expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (5) gpoconst -> empty .
 
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 5
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 13
-
-    expression                     shift and go to state 19
-
-state 12
-
-    (7) expression -> MINUS expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    PLUS            reduce using rule 7 (expression -> MINUS expression .)
-    MINUS           reduce using rule 7 (expression -> MINUS expression .)
-    TIMES           reduce using rule 7 (expression -> MINUS expression .)
-    DIVIDE          reduce using rule 7 (expression -> MINUS expression .)
-    $end            reduce using rule 7 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 7 (expression -> MINUS expression .)
-
-  ! PLUS            [ shift and go to state 8 ]
-  ! MINUS           [ shift and go to state 9 ]
-  ! TIMES           [ shift and go to state 10 ]
-  ! DIVIDE          [ shift and go to state 11 ]
-
-
-state 13
-
-    (10) expression -> NAME .
-
-    PLUS            reduce using rule 10 (expression -> NAME .)
-    MINUS           reduce using rule 10 (expression -> NAME .)
-    TIMES           reduce using rule 10 (expression -> NAME .)
-    DIVIDE          reduce using rule 10 (expression -> NAME .)
-    $end            reduce using rule 10 (expression -> NAME .)
-    RPAREN          reduce using rule 10 (expression -> NAME .)
-
-
-state 14
-
-    (8) expression -> LPAREN expression . RPAREN
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    RPAREN          shift and go to state 20
-    PLUS            shift and go to state 8
-    MINUS           shift and go to state 9
-    TIMES           shift and go to state 10
-    DIVIDE          shift and go to state 11
-
-
-state 15
-
-    (1) statement -> NAME EQUALS expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    $end            reduce using rule 1 (statement -> NAME EQUALS expression .)
-    PLUS            shift and go to state 8
-    MINUS           shift and go to state 9
-    TIMES           shift and go to state 10
-    DIVIDE          shift and go to state 11
-
-
-state 16
-
-    (3) expression -> expression PLUS expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    PLUS            reduce using rule 3 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 3 (expression -> expression PLUS expression .)
-    $end            reduce using rule 3 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 3 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 10
-    DIVIDE          shift and go to state 11
-
-  ! TIMES           [ reduce using rule 3 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 3 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 8 ]
-  ! MINUS           [ shift and go to state 9 ]
-
-
-state 17
-
-    (4) expression -> expression MINUS expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    PLUS            reduce using rule 4 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 4 (expression -> expression MINUS expression .)
-    $end            reduce using rule 4 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 4 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 10
-    DIVIDE          shift and go to state 11
-
-  ! TIMES           [ reduce using rule 4 (expression -> expression MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 4 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 8 ]
-  ! MINUS           [ shift and go to state 9 ]
-
-
-state 18
-
-    (5) expression -> expression TIMES expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    PLUS            reduce using rule 5 (expression -> expression TIMES expression .)
-    MINUS           reduce using rule 5 (expression -> expression TIMES expression .)
-    TIMES           reduce using rule 5 (expression -> expression TIMES expression .)
-    DIVIDE          reduce using rule 5 (expression -> expression TIMES expression .)
-    $end            reduce using rule 5 (expression -> expression TIMES expression .)
-    RPAREN          reduce using rule 5 (expression -> expression TIMES expression .)
-
-  ! PLUS            [ shift and go to state 8 ]
-  ! MINUS           [ shift and go to state 9 ]
-  ! TIMES           [ shift and go to state 10 ]
-  ! DIVIDE          [ shift and go to state 11 ]
-
-
-state 19
-
-    (6) expression -> expression DIVIDE expression .
-    (3) expression -> expression . PLUS expression
-    (4) expression -> expression . MINUS expression
-    (5) expression -> expression . TIMES expression
-    (6) expression -> expression . DIVIDE expression
-
-    PLUS            reduce using rule 6 (expression -> expression DIVIDE expression .)
-    MINUS           reduce using rule 6 (expression -> expression DIVIDE expression .)
-    TIMES           reduce using rule 6 (expression -> expression DIVIDE expression .)
-    DIVIDE          reduce using rule 6 (expression -> expression DIVIDE expression .)
-    $end            reduce using rule 6 (expression -> expression DIVIDE expression .)
-    RPAREN          reduce using rule 6 (expression -> expression DIVIDE expression .)
-
-  ! PLUS            [ shift and go to state 8 ]
-  ! MINUS           [ shift and go to state 9 ]
-  ! TIMES           [ shift and go to state 10 ]
-  ! DIVIDE          [ shift and go to state 11 ]
-
-
-state 20
-
-    (8) expression -> LPAREN expression RPAREN .
-
-    PLUS            reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    $end            reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 5 (gpoconst -> empty .)
 

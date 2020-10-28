@@ -1,6 +1,7 @@
-import ply.lex as lex
+
 import sys
 from lex_analyzer import Lexer
+from syntax_analyzer import Syntax
 
 lex_ = None
 
@@ -13,15 +14,16 @@ else:
 
     lex_ = Lexer(file_name.split(".")[0])
     lex_.build_lex()
-    # Read the source file
-    if file_:
-        lex_.lex.input(file_.read())
-        file_.close()
-        while True:
-            # Get the tokens
-            tok = lex_.lex.token()
-            if not tok:
-                break
 
-#lex_.show_lex_cmp()
+    syntax = Syntax()
+    syntax.build()
+    # Read the source file
+
+    result = syntax.parser.parse("variables")
+    if result:
+        print(result)
+
+
+
 lex_.close_file()
+

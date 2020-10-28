@@ -1,7 +1,7 @@
-constantes PI:=3.e141592;
-	   MAX:=3a;
+constantes PI:=3.141592;
+	   MAX:=3;
 
-variables i, j, k, n, vector[MAX], matriz[MAX][MAX]:Entero;
+variables i, j, k, n, vector[MAX], matriz[MAX][MAX]:=Entero;
           r, s, t:real;
           Alfa, Beta:Alfabetico;
           Log1, Log2:Logicos;
