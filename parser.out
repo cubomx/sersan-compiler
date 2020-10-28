@@ -39,10 +39,10 @@ Rule 22    grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA
 Rule 23    grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst
 Rule 24    grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst
 Rule 25    grupoconst -> empty
-Rule 26    protfuncproc -> protfunc
+Rule 26    protfuncproc -> protfunc protfuncproc
 Rule 27    protfuncproc -> protproc protfuncproc
 Rule 28    protfuncproc -> empty
-Rule 29    protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+Rule 29    protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
 Rule 30    protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
 Rule 31    params -> gpopars PUNTOS_DOBLES TIPO otrospars
 Rule 32    params -> empty
@@ -156,7 +156,7 @@ DIV                  : 94
 EL                   : 65 69
 FALSO                : 107
 FIN                  : 1 41 42 63 69
-FUNCION              : 42 42
+FUNCION              : 29 42 42
 HACER                : 60
 HASTA                : 65 66
 IDENT                : 7 8 9 10 15 18 21 22 23 24 29 30 35 41 42 68 69 100 101 108 109 112 113
@@ -215,7 +215,7 @@ estatuto             : 43 63
 expo                 : 92 93 94 95 97
 expr                 : 65 78 87 88 90 91
 exprlog              : 60 66 67 68 77 81 102 114 115 116 117
-funcion              : 29 39
+funcion              : 39
 funcproc             : 1 38 39
 gpoconst             : 72 75
 gpoexp               : 110 111 115
@@ -244,7 +244,7 @@ params               : 29 30 33 41 42
 procedimiento        : 38
 program              : 0
 protfunc             : 26
-protfuncproc         : 1 27
+protfuncproc         : 1 26 27
 protproc             : 27
 regresa              : 51
 repetir              : 48
@@ -269,8 +269,8 @@ state 0
 
     CONSTANTES      shift and go to state 3
     VARIABLES       reduce using rule 119 (empty -> .)
-    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     FUNCION         reduce using rule 119 (empty -> .)
+    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     PROGRAMA        reduce using rule 119 (empty -> .)
 
     program                        shift and go to state 1
@@ -291,8 +291,8 @@ state 2
     (119) empty -> .
 
     VARIABLES       shift and go to state 6
-    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     FUNCION         reduce using rule 119 (empty -> .)
+    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     PROGRAMA        reduce using rule 119 (empty -> .)
 
     variables                      shift and go to state 5
@@ -310,8 +310,8 @@ state 3
 
     IDENT           shift and go to state 9
     VARIABLES       reduce using rule 119 (empty -> .)
-    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     FUNCION         reduce using rule 119 (empty -> .)
+    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     PROGRAMA        reduce using rule 119 (empty -> .)
 
     grupoconst                     shift and go to state 8
@@ -322,27 +322,26 @@ state 4
     (20) constantes -> empty .
 
     VARIABLES       reduce using rule 20 (constantes -> empty .)
-    PROCEDIMIENTO   reduce using rule 20 (constantes -> empty .)
     FUNCION         reduce using rule 20 (constantes -> empty .)
+    PROCEDIMIENTO   reduce using rule 20 (constantes -> empty .)
     PROGRAMA        reduce using rule 20 (constantes -> empty .)
 
 
 state 5
 
     (1) program -> constantes variables . protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA
-    (26) protfuncproc -> . protfunc
+    (26) protfuncproc -> . protfunc protfuncproc
     (27) protfuncproc -> . protproc protfuncproc
     (28) protfuncproc -> . empty
-    (29) protfunc -> . funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+    (29) protfunc -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
     (30) protproc -> . PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
     (119) empty -> .
-    (42) funcion -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
 
   ! shift/reduce conflict for PROCEDIMIENTO resolved as shift
   ! shift/reduce conflict for FUNCION resolved as shift
+    FUNCION         shift and go to state 15
     PROCEDIMIENTO   shift and go to state 16
     PROGRAMA        reduce using rule 119 (empty -> .)
-    FUNCION         shift and go to state 17
 
   ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! FUNCION         [ reduce using rule 119 (empty -> .) ]
@@ -351,7 +350,6 @@ state 5
     protfunc                       shift and go to state 12
     protproc                       shift and go to state 13
     empty                          shift and go to state 14
-    funcion                        shift and go to state 15
 
 state 6
 
@@ -366,23 +364,23 @@ state 6
     (11) gpoids -> . empty
     (119) empty -> .
 
-    IDENT           shift and go to state 21
-    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
+    IDENT           shift and go to state 20
     FUNCION         reduce using rule 119 (empty -> .)
+    PROCEDIMIENTO   reduce using rule 119 (empty -> .)
     PROGRAMA        reduce using rule 119 (empty -> .)
     INICIO          reduce using rule 119 (empty -> .)
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
-    gpovars                        shift and go to state 18
-    gpoids                         shift and go to state 19
-    empty                          shift and go to state 20
+    gpovars                        shift and go to state 17
+    gpoids                         shift and go to state 18
+    empty                          shift and go to state 19
 
 state 7
 
     (3) variables -> empty .
 
-    PROCEDIMIENTO   reduce using rule 3 (variables -> empty .)
     FUNCION         reduce using rule 3 (variables -> empty .)
+    PROCEDIMIENTO   reduce using rule 3 (variables -> empty .)
     PROGRAMA        reduce using rule 3 (variables -> empty .)
     INICIO          reduce using rule 3 (variables -> empty .)
 
@@ -392,8 +390,8 @@ state 8
     (19) constantes -> CONSTANTES grupoconst .
 
     VARIABLES       reduce using rule 19 (constantes -> CONSTANTES grupoconst .)
-    PROCEDIMIENTO   reduce using rule 19 (constantes -> CONSTANTES grupoconst .)
     FUNCION         reduce using rule 19 (constantes -> CONSTANTES grupoconst .)
+    PROCEDIMIENTO   reduce using rule 19 (constantes -> CONSTANTES grupoconst .)
     PROGRAMA        reduce using rule 19 (constantes -> CONSTANTES grupoconst .)
 
 
@@ -404,7 +402,7 @@ state 9
     (23) grupoconst -> IDENT . OP_ASIG CTE_REAL PUNTO_COMA grupoconst
     (24) grupoconst -> IDENT . OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst
 
-    OP_ASIG         shift and go to state 22
+    OP_ASIG         shift and go to state 21
 
 
 state 10
@@ -412,8 +410,8 @@ state 10
     (25) grupoconst -> empty .
 
     VARIABLES       reduce using rule 25 (grupoconst -> empty .)
-    PROCEDIMIENTO   reduce using rule 25 (grupoconst -> empty .)
     FUNCION         reduce using rule 25 (grupoconst -> empty .)
+    PROCEDIMIENTO   reduce using rule 25 (grupoconst -> empty .)
     PROGRAMA        reduce using rule 25 (grupoconst -> empty .)
 
 
@@ -427,49 +425,62 @@ state 11
     (42) funcion -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
     (119) empty -> .
 
-    PROCEDIMIENTO   shift and go to state 27
-    FUNCION         shift and go to state 17
+    PROCEDIMIENTO   shift and go to state 26
+    FUNCION         shift and go to state 27
     PROGRAMA        reduce using rule 119 (empty -> .)
 
-    funcproc                       shift and go to state 23
-    procedimiento                  shift and go to state 24
-    funcion                        shift and go to state 25
-    empty                          shift and go to state 26
+    funcproc                       shift and go to state 22
+    procedimiento                  shift and go to state 23
+    funcion                        shift and go to state 24
+    empty                          shift and go to state 25
 
 state 12
 
-    (26) protfuncproc -> protfunc .
+    (26) protfuncproc -> protfunc . protfuncproc
+    (26) protfuncproc -> . protfunc protfuncproc
+    (27) protfuncproc -> . protproc protfuncproc
+    (28) protfuncproc -> . empty
+    (29) protfunc -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+    (30) protproc -> . PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
+    (119) empty -> .
 
-    PROCEDIMIENTO   reduce using rule 26 (protfuncproc -> protfunc .)
-    FUNCION         reduce using rule 26 (protfuncproc -> protfunc .)
-    PROGRAMA        reduce using rule 26 (protfuncproc -> protfunc .)
+  ! shift/reduce conflict for PROCEDIMIENTO resolved as shift
+  ! shift/reduce conflict for FUNCION resolved as shift
+    FUNCION         shift and go to state 15
+    PROCEDIMIENTO   shift and go to state 16
+    PROGRAMA        reduce using rule 119 (empty -> .)
 
+  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
+  ! FUNCION         [ reduce using rule 119 (empty -> .) ]
+
+    protfunc                       shift and go to state 12
+    protfuncproc                   shift and go to state 28
+    protproc                       shift and go to state 13
+    empty                          shift and go to state 14
 
 state 13
 
     (27) protfuncproc -> protproc . protfuncproc
-    (26) protfuncproc -> . protfunc
+    (26) protfuncproc -> . protfunc protfuncproc
     (27) protfuncproc -> . protproc protfuncproc
     (28) protfuncproc -> . empty
-    (29) protfunc -> . funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+    (29) protfunc -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
     (30) protproc -> . PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
     (119) empty -> .
-    (42) funcion -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
 
   ! shift/reduce conflict for PROCEDIMIENTO resolved as shift
   ! shift/reduce conflict for FUNCION resolved as shift
+    FUNCION         shift and go to state 15
     PROCEDIMIENTO   shift and go to state 16
     PROGRAMA        reduce using rule 119 (empty -> .)
-    FUNCION         shift and go to state 17
 
   ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! FUNCION         [ reduce using rule 119 (empty -> .) ]
 
     protproc                       shift and go to state 13
-    protfuncproc                   shift and go to state 28
+    protfuncproc                   shift and go to state 29
     protfunc                       shift and go to state 12
     empty                          shift and go to state 14
-    funcion                        shift and go to state 15
 
 state 14
 
@@ -482,36 +493,29 @@ state 14
 
 state 15
 
-    (29) protfunc -> funcion . IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+    (29) protfunc -> FUNCION . IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
 
-    IDENT           shift and go to state 29
+    IDENT           shift and go to state 30
 
 
 state 16
 
     (30) protproc -> PROCEDIMIENTO . IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
 
-    IDENT           shift and go to state 30
+    IDENT           shift and go to state 31
 
 
 state 17
 
-    (42) funcion -> FUNCION . IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
-
-    IDENT           shift and go to state 31
-
-
-state 18
-
     (2) variables -> VARIABLES gpovars .
 
-    PROCEDIMIENTO   reduce using rule 2 (variables -> VARIABLES gpovars .)
     FUNCION         reduce using rule 2 (variables -> VARIABLES gpovars .)
+    PROCEDIMIENTO   reduce using rule 2 (variables -> VARIABLES gpovars .)
     PROGRAMA        reduce using rule 2 (variables -> VARIABLES gpovars .)
     INICIO          reduce using rule 2 (variables -> VARIABLES gpovars .)
 
 
-state 19
+state 18
 
     (4) gpovars -> gpoids . PUNTOS_DOBLES TIPO PUNTO_COMA gpovars
     (5) gpovars -> gpoids . PUNTOS_DOBLES TIPO PUNTO_COMA
@@ -519,19 +523,19 @@ state 19
     PUNTOS_DOBLES   shift and go to state 32
 
 
-state 20
+state 19
 
     (6) gpovars -> empty .
     (11) gpoids -> empty .
 
-    PROCEDIMIENTO   reduce using rule 6 (gpovars -> empty .)
     FUNCION         reduce using rule 6 (gpovars -> empty .)
+    PROCEDIMIENTO   reduce using rule 6 (gpovars -> empty .)
     PROGRAMA        reduce using rule 6 (gpovars -> empty .)
     INICIO          reduce using rule 6 (gpovars -> empty .)
     PUNTOS_DOBLES   reduce using rule 11 (gpoids -> empty .)
 
 
-state 21
+state 20
 
     (7) gpoids -> IDENT . dimens COMA gpoids
     (8) gpoids -> IDENT . dimens
@@ -556,7 +560,7 @@ state 21
     opasig                         shift and go to state 35
     empty                          shift and go to state 37
 
-state 22
+state 21
 
     (21) grupoconst -> IDENT OP_ASIG . CTE_REAL PUNTO_COMA
     (22) grupoconst -> IDENT OP_ASIG . CTE_ENTERA PUNTO_COMA
@@ -567,14 +571,14 @@ state 22
     CTE_ENTERA      shift and go to state 40
 
 
-state 23
+state 22
 
     (1) program -> constantes variables protfuncproc funcproc . PROGRAMA block FIN DE PROGRAMA
 
     PROGRAMA        shift and go to state 41
 
 
-state 24
+state 23
 
     (38) funcproc -> procedimiento . funcproc
     (38) funcproc -> . procedimiento funcproc
@@ -584,16 +588,16 @@ state 24
     (42) funcion -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
     (119) empty -> .
 
-    PROCEDIMIENTO   shift and go to state 27
-    FUNCION         shift and go to state 17
+    PROCEDIMIENTO   shift and go to state 26
+    FUNCION         shift and go to state 27
     PROGRAMA        reduce using rule 119 (empty -> .)
 
-    procedimiento                  shift and go to state 24
+    procedimiento                  shift and go to state 23
     funcproc                       shift and go to state 42
-    funcion                        shift and go to state 25
-    empty                          shift and go to state 26
+    funcion                        shift and go to state 24
+    empty                          shift and go to state 25
 
-state 25
+state 24
 
     (39) funcproc -> funcion . funcproc
     (38) funcproc -> . procedimiento funcproc
@@ -603,30 +607,46 @@ state 25
     (42) funcion -> . FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
     (119) empty -> .
 
-    PROCEDIMIENTO   shift and go to state 27
-    FUNCION         shift and go to state 17
+    PROCEDIMIENTO   shift and go to state 26
+    FUNCION         shift and go to state 27
     PROGRAMA        reduce using rule 119 (empty -> .)
 
-    funcion                        shift and go to state 25
+    funcion                        shift and go to state 24
     funcproc                       shift and go to state 43
-    procedimiento                  shift and go to state 24
-    empty                          shift and go to state 26
+    procedimiento                  shift and go to state 23
+    empty                          shift and go to state 25
 
-state 26
+state 25
 
     (40) funcproc -> empty .
 
     PROGRAMA        reduce using rule 40 (funcproc -> empty .)
 
 
-state 27
+state 26
 
     (41) procedimiento -> PROCEDIMIENTO . IDENT PAREN_EMPIEZA params PAREN_TERMINA variables INICIO block FIN DE PROCEDIMIENTO PUNTO_COMA
 
     IDENT           shift and go to state 44
 
 
+state 27
+
+    (42) funcion -> FUNCION . IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+
+    IDENT           shift and go to state 45
+
+
 state 28
+
+    (26) protfuncproc -> protfunc protfuncproc .
+
+    PROCEDIMIENTO   reduce using rule 26 (protfuncproc -> protfunc protfuncproc .)
+    FUNCION         reduce using rule 26 (protfuncproc -> protfunc protfuncproc .)
+    PROGRAMA        reduce using rule 26 (protfuncproc -> protfunc protfuncproc .)
+
+
+state 29
 
     (27) protfuncproc -> protproc protfuncproc .
 
@@ -635,23 +655,16 @@ state 28
     PROGRAMA        reduce using rule 27 (protfuncproc -> protproc protfuncproc .)
 
 
-state 29
-
-    (29) protfunc -> funcion IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
-
-    PAREN_EMPIEZA   shift and go to state 45
-
-
 state 30
 
-    (30) protproc -> PROCEDIMIENTO IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
+    (29) protfunc -> FUNCION IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
 
     PAREN_EMPIEZA   shift and go to state 46
 
 
 state 31
 
-    (42) funcion -> FUNCION IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (30) protproc -> PROCEDIMIENTO IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA
 
     PAREN_EMPIEZA   shift and go to state 47
 
@@ -683,7 +696,7 @@ state 34
     (11) gpoids -> . empty
     (119) empty -> .
 
-    IDENT           shift and go to state 21
+    IDENT           shift and go to state 20
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
     gpoids                         shift and go to state 50
@@ -832,20 +845,27 @@ state 44
 
 state 45
 
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA . params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
+    (42) funcion -> FUNCION IDENT . PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+
+    PAREN_EMPIEZA   shift and go to state 88
+
+
+state 46
+
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA . params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
     (31) params -> . gpopars PUNTOS_DOBLES TIPO otrospars
     (32) params -> . empty
     (35) gpopars -> . IDENT maspars
     (119) empty -> .
 
-    IDENT           shift and go to state 88
+    IDENT           shift and go to state 89
     PAREN_TERMINA   reduce using rule 119 (empty -> .)
 
-    params                         shift and go to state 89
-    gpopars                        shift and go to state 90
-    empty                          shift and go to state 91
+    params                         shift and go to state 90
+    gpopars                        shift and go to state 91
+    empty                          shift and go to state 92
 
-state 46
+state 47
 
     (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA . params PAREN_TERMINA PUNTO_COMA
     (31) params -> . gpopars PUNTOS_DOBLES TIPO otrospars
@@ -853,27 +873,12 @@ state 46
     (35) gpopars -> . IDENT maspars
     (119) empty -> .
 
-    IDENT           shift and go to state 88
-    PAREN_TERMINA   reduce using rule 119 (empty -> .)
-
-    params                         shift and go to state 92
-    gpopars                        shift and go to state 90
-    empty                          shift and go to state 91
-
-state 47
-
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA . params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
-    (31) params -> . gpopars PUNTOS_DOBLES TIPO otrospars
-    (32) params -> . empty
-    (35) gpopars -> . IDENT maspars
-    (119) empty -> .
-
-    IDENT           shift and go to state 88
+    IDENT           shift and go to state 89
     PAREN_TERMINA   reduce using rule 119 (empty -> .)
 
     params                         shift and go to state 93
-    gpopars                        shift and go to state 90
-    empty                          shift and go to state 91
+    gpopars                        shift and go to state 91
+    empty                          shift and go to state 92
 
 state 48
 
@@ -893,7 +898,7 @@ state 49
     (11) gpoids -> . empty
     (119) empty -> .
 
-    IDENT           shift and go to state 21
+    IDENT           shift and go to state 20
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
     gpoids                         shift and go to state 95
@@ -923,7 +928,7 @@ state 52
     (11) gpoids -> . empty
     (119) empty -> .
 
-    IDENT           shift and go to state 21
+    IDENT           shift and go to state 20
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
     gpoids                         shift and go to state 96
@@ -976,18 +981,18 @@ state 58
     (119) empty -> .
 
   ! reduce/reduce conflict for VARIABLES resolved using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
-  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
   ! reduce/reduce conflict for FUNCION resolved using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
+  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
   ! reduce/reduce conflict for PROGRAMA resolved using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
     VARIABLES       reduce using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
-    PROCEDIMIENTO   reduce using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
     FUNCION         reduce using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
+    PROCEDIMIENTO   reduce using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
     PROGRAMA        reduce using rule 21 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA .)
     IDENT           shift and go to state 9
 
   ! VARIABLES       [ reduce using rule 119 (empty -> .) ]
-  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! FUNCION         [ reduce using rule 119 (empty -> .) ]
+  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! PROGRAMA        [ reduce using rule 119 (empty -> .) ]
 
     grupoconst                     shift and go to state 98
@@ -1005,18 +1010,18 @@ state 59
     (119) empty -> .
 
   ! reduce/reduce conflict for VARIABLES resolved using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
-  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
   ! reduce/reduce conflict for FUNCION resolved using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
+  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
   ! reduce/reduce conflict for PROGRAMA resolved using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
     VARIABLES       reduce using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
-    PROCEDIMIENTO   reduce using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
     FUNCION         reduce using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
+    PROCEDIMIENTO   reduce using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
     PROGRAMA        reduce using rule 22 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA .)
     IDENT           shift and go to state 9
 
   ! VARIABLES       [ reduce using rule 119 (empty -> .) ]
-  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! FUNCION         [ reduce using rule 119 (empty -> .) ]
+  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! PROGRAMA        [ reduce using rule 119 (empty -> .) ]
 
     grupoconst                     shift and go to state 99
@@ -1334,57 +1339,65 @@ state 87
     (35) gpopars -> . IDENT maspars
     (119) empty -> .
 
-    IDENT           shift and go to state 88
+    IDENT           shift and go to state 89
     PAREN_TERMINA   reduce using rule 119 (empty -> .)
 
     params                         shift and go to state 127
-    gpopars                        shift and go to state 90
-    empty                          shift and go to state 91
+    gpopars                        shift and go to state 91
+    empty                          shift and go to state 92
 
 state 88
+
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA . params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (31) params -> . gpopars PUNTOS_DOBLES TIPO otrospars
+    (32) params -> . empty
+    (35) gpopars -> . IDENT maspars
+    (119) empty -> .
+
+    IDENT           shift and go to state 89
+    PAREN_TERMINA   reduce using rule 119 (empty -> .)
+
+    params                         shift and go to state 128
+    gpopars                        shift and go to state 91
+    empty                          shift and go to state 92
+
+state 89
 
     (35) gpopars -> IDENT . maspars
     (36) maspars -> . COMA gpopars
     (37) maspars -> . empty
     (119) empty -> .
 
-    COMA            shift and go to state 129
+    COMA            shift and go to state 130
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
-    maspars                        shift and go to state 128
-    empty                          shift and go to state 130
-
-state 89
-
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
-
-    PAREN_TERMINA   shift and go to state 131
-
+    maspars                        shift and go to state 129
+    empty                          shift and go to state 131
 
 state 90
 
-    (31) params -> gpopars . PUNTOS_DOBLES TIPO otrospars
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA
 
-    PUNTOS_DOBLES   shift and go to state 132
+    PAREN_TERMINA   shift and go to state 132
 
 
 state 91
+
+    (31) params -> gpopars . PUNTOS_DOBLES TIPO otrospars
+
+    PUNTOS_DOBLES   shift and go to state 133
+
+
+state 92
 
     (32) params -> empty .
 
     PAREN_TERMINA   reduce using rule 32 (params -> empty .)
 
 
-state 92
-
-    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTO_COMA
-
-    PAREN_TERMINA   shift and go to state 133
-
-
 state 93
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTO_COMA
 
     PAREN_TERMINA   shift and go to state 134
 
@@ -1403,25 +1416,25 @@ state 94
     (11) gpoids -> . empty
     (119) empty -> .
 
-  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
   ! reduce/reduce conflict for FUNCION resolved using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
+  ! reduce/reduce conflict for PROCEDIMIENTO resolved using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
   ! reduce/reduce conflict for PROGRAMA resolved using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
   ! reduce/reduce conflict for INICIO resolved using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
-    PROCEDIMIENTO   reduce using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
     FUNCION         reduce using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
+    PROCEDIMIENTO   reduce using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
     PROGRAMA        reduce using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
     INICIO          reduce using rule 5 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA .)
-    IDENT           shift and go to state 21
+    IDENT           shift and go to state 20
     PUNTOS_DOBLES   reduce using rule 119 (empty -> .)
 
-  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! FUNCION         [ reduce using rule 119 (empty -> .) ]
+  ! PROCEDIMIENTO   [ reduce using rule 119 (empty -> .) ]
   ! PROGRAMA        [ reduce using rule 119 (empty -> .) ]
   ! INICIO          [ reduce using rule 119 (empty -> .) ]
 
-    gpoids                         shift and go to state 19
+    gpoids                         shift and go to state 18
     gpovars                        shift and go to state 135
-    empty                          shift and go to state 20
+    empty                          shift and go to state 19
 
 state 95
 
@@ -1457,8 +1470,8 @@ state 98
     (23) grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .
 
     VARIABLES       reduce using rule 23 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .)
-    PROCEDIMIENTO   reduce using rule 23 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .)
     FUNCION         reduce using rule 23 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .)
+    PROCEDIMIENTO   reduce using rule 23 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .)
     PROGRAMA        reduce using rule 23 (grupoconst -> IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst .)
 
 
@@ -1467,8 +1480,8 @@ state 99
     (24) grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .
 
     VARIABLES       reduce using rule 24 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .)
-    PROCEDIMIENTO   reduce using rule 24 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .)
     FUNCION         reduce using rule 24 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .)
+    PROCEDIMIENTO   reduce using rule 24 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .)
     PROGRAMA        reduce using rule 24 (grupoconst -> IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst .)
 
 
@@ -2538,61 +2551,61 @@ state 127
 
 state 128
 
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params . PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+
+    PAREN_TERMINA   shift and go to state 172
+
+
+state 129
+
     (35) gpopars -> IDENT maspars .
 
     PUNTOS_DOBLES   reduce using rule 35 (gpopars -> IDENT maspars .)
 
 
-state 129
+state 130
 
     (36) maspars -> COMA . gpopars
     (35) gpopars -> . IDENT maspars
 
-    IDENT           shift and go to state 88
+    IDENT           shift and go to state 89
 
-    gpopars                        shift and go to state 172
+    gpopars                        shift and go to state 173
 
-state 130
+state 131
 
     (37) maspars -> empty .
 
     PUNTOS_DOBLES   reduce using rule 37 (maspars -> empty .)
 
 
-state 131
-
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTOS_DOBLES TIPO PUNTO_COMA
-
-    PUNTOS_DOBLES   shift and go to state 173
-
-
 state 132
 
-    (31) params -> gpopars PUNTOS_DOBLES . TIPO otrospars
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTOS_DOBLES TIPO PUNTO_COMA
 
-    TIPO            shift and go to state 174
+    PUNTOS_DOBLES   shift and go to state 174
 
 
 state 133
 
-    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTO_COMA
+    (31) params -> gpopars PUNTOS_DOBLES . TIPO otrospars
 
-    PUNTO_COMA      shift and go to state 175
+    TIPO            shift and go to state 175
 
 
 state 134
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTO_COMA
 
-    PUNTOS_DOBLES   shift and go to state 176
+    PUNTO_COMA      shift and go to state 176
 
 
 state 135
 
     (4) gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .
 
-    PROCEDIMIENTO   reduce using rule 4 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .)
     FUNCION         reduce using rule 4 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .)
+    PROCEDIMIENTO   reduce using rule 4 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .)
     PROGRAMA        reduce using rule 4 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .)
     INICIO          reduce using rule 4 (gpovars -> gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars .)
 
@@ -3554,45 +3567,45 @@ state 171
 
 state 172
 
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA . PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+
+    PUNTOS_DOBLES   shift and go to state 205
+
+
+state 173
+
     (36) maspars -> COMA gpopars .
 
     PUNTOS_DOBLES   reduce using rule 36 (maspars -> COMA gpopars .)
 
 
-state 173
-
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES . TIPO PUNTO_COMA
-
-    TIPO            shift and go to state 205
-
-
 state 174
+
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES . TIPO PUNTO_COMA
+
+    TIPO            shift and go to state 206
+
+
+state 175
 
     (31) params -> gpopars PUNTOS_DOBLES TIPO . otrospars
     (33) otrospars -> . PUNTO_COMA params
     (34) otrospars -> . empty
     (119) empty -> .
 
-    PUNTO_COMA      shift and go to state 207
+    PUNTO_COMA      shift and go to state 208
     PAREN_TERMINA   reduce using rule 119 (empty -> .)
 
-    otrospars                      shift and go to state 206
-    empty                          shift and go to state 208
-
-state 175
-
-    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .
-
-    PROCEDIMIENTO   reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
-    FUNCION         reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
-    PROGRAMA        reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
-
+    otrospars                      shift and go to state 207
+    empty                          shift and go to state 209
 
 state 176
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES . TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (30) protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .
 
-    TIPO            shift and go to state 209
+    FUNCION         reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
+    PROCEDIMIENTO   reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
+    PROGRAMA        reduce using rule 30 (protproc -> PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA .)
 
 
 state 177
@@ -4284,19 +4297,26 @@ state 204
 
 state 205
 
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO . PUNTO_COMA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES . TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA
 
-    PUNTO_COMA      shift and go to state 226
+    TIPO            shift and go to state 226
 
 
 state 206
+
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 227
+
+
+state 207
 
     (31) params -> gpopars PUNTOS_DOBLES TIPO otrospars .
 
     PAREN_TERMINA   reduce using rule 31 (params -> gpopars PUNTOS_DOBLES TIPO otrospars .)
 
 
-state 207
+state 208
 
     (33) otrospars -> PUNTO_COMA . params
     (31) params -> . gpopars PUNTOS_DOBLES TIPO otrospars
@@ -4304,32 +4324,19 @@ state 207
     (35) gpopars -> . IDENT maspars
     (119) empty -> .
 
-    IDENT           shift and go to state 88
+    IDENT           shift and go to state 89
     PAREN_TERMINA   reduce using rule 119 (empty -> .)
 
-    params                         shift and go to state 227
-    gpopars                        shift and go to state 90
-    empty                          shift and go to state 91
+    params                         shift and go to state 228
+    gpopars                        shift and go to state 91
+    empty                          shift and go to state 92
 
-state 208
+state 209
 
     (34) otrospars -> empty .
 
     PAREN_TERMINA   reduce using rule 34 (otrospars -> empty .)
 
-
-state 209
-
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO . variables INICIO block FIN DE FUNCION PUNTO_COMA
-    (2) variables -> . VARIABLES gpovars
-    (3) variables -> . empty
-    (119) empty -> .
-
-    VARIABLES       shift and go to state 6
-    INICIO          reduce using rule 119 (empty -> .)
-
-    variables                      shift and go to state 228
-    empty                          shift and go to state 7
 
 state 210
 
@@ -4792,25 +4799,31 @@ state 225
 
 state 226
 
-    (29) protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO . variables INICIO block FIN DE FUNCION PUNTO_COMA
+    (2) variables -> . VARIABLES gpovars
+    (3) variables -> . empty
+    (119) empty -> .
 
-    PROCEDIMIENTO   reduce using rule 29 (protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
-    FUNCION         reduce using rule 29 (protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
-    PROGRAMA        reduce using rule 29 (protfunc -> funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
+    VARIABLES       shift and go to state 6
+    INICIO          reduce using rule 119 (empty -> .)
 
+    variables                      shift and go to state 238
+    empty                          shift and go to state 7
 
 state 227
 
-    (33) otrospars -> PUNTO_COMA params .
+    (29) protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .
 
-    PAREN_TERMINA   reduce using rule 33 (otrospars -> PUNTO_COMA params .)
+    FUNCION         reduce using rule 29 (protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
+    PROCEDIMIENTO   reduce using rule 29 (protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
+    PROGRAMA        reduce using rule 29 (protfunc -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA .)
 
 
 state 228
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables . INICIO block FIN DE FUNCION PUNTO_COMA
+    (33) otrospars -> PUNTO_COMA params .
 
-    INICIO          shift and go to state 238
+    PAREN_TERMINA   reduce using rule 33 (otrospars -> PUNTO_COMA params .)
 
 
 state 229
@@ -4967,68 +4980,10 @@ state 237
 
 state 238
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO . block FIN DE FUNCION PUNTO_COMA
-    (43) block -> . estatuto PUNTO_COMA block
-    (44) block -> . empty
-    (45) estatuto -> . si
-    (46) estatuto -> . LIMPIA
-    (47) estatuto -> . desde
-    (48) estatuto -> . repetir
-    (49) estatuto -> . mientras
-    (50) estatuto -> . cuando
-    (51) estatuto -> . regresa
-    (52) estatuto -> . asigna
-    (53) estatuto -> . lproc
-    (54) estatuto -> . imprime
-    (55) estatuto -> . imprimenl
-    (56) estatuto -> . lee
-    (57) estatuto -> . INTERRUMPE
-    (58) estatuto -> . CONTINUA
-    (59) estatuto -> . empty
-    (119) empty -> .
-    (60) si -> . SI PAREN_EMPIEZA exprlog PAREN_TERMINA HACER bckesp sino
-    (65) desde -> . DESDE EL VALOR DE asigna HASTA expr bckesp
-    (66) repetir -> . REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA
-    (67) mientras -> . MIENTRAS SE CUMPLA QUE exprlog bckesp
-    (69) cuando -> . CUANDO EL VALOR DE IDENT INICIO gposea otro FIN
-    (77) regresa -> . REGRESA PAREN_EMPIEZA exprlog PAREN_TERMINA
-    (68) asigna -> . IDENT udim OP_ASIG exprlog
-    (108) lproc -> . IDENT PAREN_EMPIEZA uparams PAREN_TERMINA
-    (110) imprime -> . IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA
-    (111) imprimenl -> . IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA
-    (112) lee -> . LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
-    (113) lee -> . LEE PAREN_EMPIEZA IDENT dimens PAREN_TERMINA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables . INICIO block FIN DE FUNCION PUNTO_COMA
 
-    LIMPIA          shift and go to state 64
-    INTERRUMPE      shift and go to state 75
-    CONTINUA        shift and go to state 76
-    FIN             reduce using rule 119 (empty -> .)
-    PUNTO_COMA      reduce using rule 119 (empty -> .)
-    SI              shift and go to state 77
-    DESDE           shift and go to state 78
-    REPETIR         shift and go to state 79
-    MIENTRAS        shift and go to state 80
-    CUANDO          shift and go to state 81
-    REGRESA         shift and go to state 83
-    IDENT           shift and go to state 82
-    IMPRIME         shift and go to state 84
-    IMPRIMENL       shift and go to state 85
-    LEE             shift and go to state 86
+    INICIO          shift and go to state 249
 
-    block                          shift and go to state 249
-    estatuto                       shift and go to state 61
-    empty                          shift and go to state 62
-    si                             shift and go to state 63
-    desde                          shift and go to state 65
-    repetir                        shift and go to state 66
-    mientras                       shift and go to state 67
-    cuando                         shift and go to state 68
-    regresa                        shift and go to state 69
-    asigna                         shift and go to state 70
-    lproc                          shift and go to state 71
-    imprime                        shift and go to state 72
-    imprimenl                      shift and go to state 73
-    lee                            shift and go to state 74
 
 state 239
 
@@ -5288,10 +5243,68 @@ state 248
 
 state 249
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block . FIN DE FUNCION PUNTO_COMA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO . block FIN DE FUNCION PUNTO_COMA
+    (43) block -> . estatuto PUNTO_COMA block
+    (44) block -> . empty
+    (45) estatuto -> . si
+    (46) estatuto -> . LIMPIA
+    (47) estatuto -> . desde
+    (48) estatuto -> . repetir
+    (49) estatuto -> . mientras
+    (50) estatuto -> . cuando
+    (51) estatuto -> . regresa
+    (52) estatuto -> . asigna
+    (53) estatuto -> . lproc
+    (54) estatuto -> . imprime
+    (55) estatuto -> . imprimenl
+    (56) estatuto -> . lee
+    (57) estatuto -> . INTERRUMPE
+    (58) estatuto -> . CONTINUA
+    (59) estatuto -> . empty
+    (119) empty -> .
+    (60) si -> . SI PAREN_EMPIEZA exprlog PAREN_TERMINA HACER bckesp sino
+    (65) desde -> . DESDE EL VALOR DE asigna HASTA expr bckesp
+    (66) repetir -> . REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA
+    (67) mientras -> . MIENTRAS SE CUMPLA QUE exprlog bckesp
+    (69) cuando -> . CUANDO EL VALOR DE IDENT INICIO gposea otro FIN
+    (77) regresa -> . REGRESA PAREN_EMPIEZA exprlog PAREN_TERMINA
+    (68) asigna -> . IDENT udim OP_ASIG exprlog
+    (108) lproc -> . IDENT PAREN_EMPIEZA uparams PAREN_TERMINA
+    (110) imprime -> . IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA
+    (111) imprimenl -> . IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA
+    (112) lee -> . LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
+    (113) lee -> . LEE PAREN_EMPIEZA IDENT dimens PAREN_TERMINA
 
-    FIN             shift and go to state 259
+    LIMPIA          shift and go to state 64
+    INTERRUMPE      shift and go to state 75
+    CONTINUA        shift and go to state 76
+    FIN             reduce using rule 119 (empty -> .)
+    PUNTO_COMA      reduce using rule 119 (empty -> .)
+    SI              shift and go to state 77
+    DESDE           shift and go to state 78
+    REPETIR         shift and go to state 79
+    MIENTRAS        shift and go to state 80
+    CUANDO          shift and go to state 81
+    REGRESA         shift and go to state 83
+    IDENT           shift and go to state 82
+    IMPRIME         shift and go to state 84
+    IMPRIMENL       shift and go to state 85
+    LEE             shift and go to state 86
 
+    block                          shift and go to state 259
+    estatuto                       shift and go to state 61
+    empty                          shift and go to state 62
+    si                             shift and go to state 63
+    desde                          shift and go to state 65
+    repetir                        shift and go to state 66
+    mientras                       shift and go to state 67
+    cuando                         shift and go to state 68
+    regresa                        shift and go to state 69
+    asigna                         shift and go to state 70
+    lproc                          shift and go to state 71
+    imprime                        shift and go to state 72
+    imprimenl                      shift and go to state 73
+    lee                            shift and go to state 74
 
 state 250
 
@@ -5366,9 +5379,9 @@ state 258
 
 state 259
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN . DE FUNCION PUNTO_COMA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block . FIN DE FUNCION PUNTO_COMA
 
-    DE              shift and go to state 268
+    FIN             shift and go to state 268
 
 
 state 260
@@ -5555,9 +5568,9 @@ state 267
 
 state 268
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE . FUNCION PUNTO_COMA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN . DE FUNCION PUNTO_COMA
 
-    FUNCION         shift and go to state 273
+    DE              shift and go to state 273
 
 
 state 269
@@ -5599,9 +5612,9 @@ state 272
 
 state 273
 
-    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION . PUNTO_COMA
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE . FUNCION PUNTO_COMA
 
-    PUNTO_COMA      shift and go to state 275
+    FUNCION         shift and go to state 275
 
 
 state 274
@@ -5614,9 +5627,15 @@ state 274
 
 state 275
 
+    (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION . PUNTO_COMA
+
+    PUNTO_COMA      shift and go to state 276
+
+
+state 276
+
     (42) funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA .
 
-    IDENT           reduce using rule 42 (funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA .)
     PROCEDIMIENTO   reduce using rule 42 (funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA .)
     FUNCION         reduce using rule 42 (funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA .)
     PROGRAMA        reduce using rule 42 (funcion -> FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA .)
@@ -5626,9 +5645,11 @@ WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for PROCEDIMIENTO in state 5 resolved as shift
 WARNING: shift/reduce conflict for FUNCION in state 5 resolved as shift
+WARNING: shift/reduce conflict for PROCEDIMIENTO in state 12 resolved as shift
+WARNING: shift/reduce conflict for FUNCION in state 12 resolved as shift
 WARNING: shift/reduce conflict for PROCEDIMIENTO in state 13 resolved as shift
 WARNING: shift/reduce conflict for FUNCION in state 13 resolved as shift
-WARNING: shift/reduce conflict for COMA in state 21 resolved as shift
+WARNING: shift/reduce conflict for COMA in state 20 resolved as shift
 WARNING: shift/reduce conflict for MAS in state 107 resolved as shift
 WARNING: shift/reduce conflict for MENOS in state 107 resolved as shift
 WARNING: shift/reduce conflict for IDENT in state 107 resolved as shift

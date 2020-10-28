@@ -82,17 +82,15 @@ class Syntax(object):
     def p_grupoconstEmpty(self, p):
         'grupoconst : empty'
 
-    def p_protfuncproc1(self, p):
-        'protfuncproc : protfunc'
-
-    def p_protfuncproc2(self, p):
-        'protfuncproc : protproc protfuncproc'
+    def p_protfuncproc(self, p):
+        '''protfuncproc : protfunc protfuncproc
+                        | protproc protfuncproc'''
 
     def p_protfunprocEmpty(self, p):
         'protfuncproc : empty'
 
     def p_protfunc(self, p):
-        'protfunc : funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
+        'protfunc : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
 
     def p_protproc(self, p):
         'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'

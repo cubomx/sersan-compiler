@@ -6,7 +6,7 @@ variables i, j, k, n:Entero;
           Alfa, Beta:Alfabetico;
           Log1, Log2:Logicos; // Logicos o logico
 
-Funcion FacRec(n:Entero):Entero;
+Funcion FacRec(n:Entero):Entero ;
 Funcion FacIter(n:Entero):Entero;
 Procedimiento LeeVec(k:Entero);
 Procedimiento LeeMat(K:Entero);
