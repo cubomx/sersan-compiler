@@ -3,84 +3,99 @@ from lex_analyzer import Lexer
 
 class Syntax(object):
     tokens = Lexer.tokens
+    precedence = (
+        ('right', 'IDENT', 'INICIO', 'SI', 'MIENTRAS'),
+        ('right', 'PROCEDIMIENTO', 'FUNCION'),
+        ('right', 'CONSTANTES', 'VARIABLES'),
+        ('right', 'OP_ASIG'),
+        ('left', 'OP_REL'),
+        ('left', 'MOD'),
+        ('left', 'MAS', 'MENOS'),
+        ('left', 'MULTI', 'DIV'),
+        ('left', 'PAREN_EMPIEZA', 'PAREN_TERMINA'),
+    )
+
     def p_programa(self, p):
-        'program : constantes variables protfuncproc funproc PROGRAMA block FIN DE PROGRAMA'
+        'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA'
 
     def p_variables(self, p):
         'variables : VARIABLES gpovars'
-        print("variables")
+
+    def p_variablesEmpty(self, p):
+        'variables : empty'
 
     def p_gpovars(self, p):
-        'gpovars : gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars'
-        print(p)
+        '''gpovars : gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars
+                   | gpoids PUNTOS_DOBLES TIPO PUNTO_COMA
+        '''
 
     def p_gpovarsEmpty(self, p):
         'gpovars : empty'
-        print(p)
 
     def p_gpoids(self, p):
-        'gpoids : IDENT dimens opasig COMA gpoids'
-        print(p)
+        '''gpoids : IDENT dimens COMA gpoids
+                  | IDENT dimens
+                  | IDENT opasig COMA gpoids
+                  | IDENT COMA gpoids
+                  '''
+
 
     def p_gpoidsEmpty(self, p):
         'gpoids : empty'
-        print(p)
 
     def p_dimens(self, p):
         'dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens'
-        print(p)
 
     def p_dimensEmpty(self, p):
         'dimens : empty'
-        print(p)
 
     def p_opasig1(self, p):
         'opasig : OP_ASIG CTE_ENTERA'
-        print(p)
 
     def p_opasig2(self, p):
         'opasig : OP_ASIG IDENT'
-        print(p)
 
     def p_opasigEmpty(self, p):
         'opasig : empty'
-        print(p)
 
     def p_valor(self, p):
         '''valor : CTE_ENTERA
                  | IDENT
         '''
-        print(p)
 
     def p_constantes(self, p):
-        'constantes : CONSTANTES IDENT OP_ASIG cantidad PUNTO_COMA grupoconst'
-        p[0] += 'CONSTANTES'
+        '''constantes : CONSTANTES grupoconst
+        '''
 
-    def p_cantidad(self, p):
-        '''cantidad : CTE_ENTERA
-                    | CTE_REAL'''
-        if p.type == "CTE_ENTERA":
-            p[0] += 'CTE_ENTERA'
-        else:
-            p[0] += 'CTE_REAL'
+
+    def p_constantesEmpty(self, p):
+        'constantes : empty'
+
 
     def p_grupoconst(self, p):
-        'grupoconst : constantes'
+        '''grupoconst : IDENT OP_ASIG CTE_REAL PUNTO_COMA
+                      | IDENT OP_ASIG CTE_ENTERA PUNTO_COMA
+                      | IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst
+                      | IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst
+        '''
 
     def p_grupoconstEmpty(self, p):
-        'gpoconst : empty'
+        'grupoconst : empty'
 
     def p_protfuncproc1(self, p):
         'protfuncproc : protfunc'
 
     def p_protfuncproc2(self, p):
-        'protfuncproc : protpoc protfuncproc'
+        'protfuncproc : protproc protfuncproc'
 
     def p_protfunprocEmpty(self, p):
         'protfuncproc : empty'
 
     def p_protfunc(self, p):
         'protfunc : funcion IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
+
+    def p_protproc(self, p):
+        'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'
 
     def p_params(self, p):
         'params : gpopars PUNTOS_DOBLES TIPO otrospars'
@@ -100,7 +115,7 @@ class Syntax(object):
     def p_maspars(self, p):
         'maspars : COMA gpopars'
 
-    def p_maspars(self, p):
+    def p_masparsEmpty(self, p):
         'maspars : empty'
 
     def p_funcproc(self, p):
@@ -140,7 +155,7 @@ class Syntax(object):
                     | CONTINUA
         '''
 
-    def p_estatuto(self, p):
+    def p_estatutoEmpty(self, p):
         'estatuto : empty'
 
     def p_si(self, p):
@@ -156,10 +171,10 @@ class Syntax(object):
         'bckesp : estatuto INICIO block FIN'
 
     def p_bckespEmpty(self, p):
-        'bckesp : emtpy'
+        'bckesp : empty'
 
     def p_desde(self, p):
-        'desde : DESDE EL VALOR DE asigna HASTA exp bckesp'
+        'desde : DESDE EL VALOR DE asigna HASTA expr bckesp'
 
     def p_repetir(self, p):
         'repetir : REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA'
@@ -200,7 +215,7 @@ class Syntax(object):
     def p_udim(self, p):
         'udim : expr udim '
 
-    def p_udim(self, p):
+    def p_udimEmpty(self, p):
         'udim : empty'
 
     def p_exprlog(self, p):
@@ -227,9 +242,78 @@ class Syntax(object):
                  | expr OP_REL oprel
          '''
 
+
+    def p_expr(self, p):
+        '''expr : multi
+                | MAS expr
+                | MENOS expr
+        '''
+
+
+    def p_multi(self, p):
+        '''multi : expo
+                 | expo MULTI
+                 | expo DIV
+                 | expo MOD multi
+        '''
+
+    def p_expo(self, p):
+        '''expo : signo
+                | signo POTENCIA expo
+        '''
+
+    def p_signo(self, p):
+        '''signo : termino
+                 | MENOS termino
+        '''
+
+    def p_termino(self, p):
+        '''termino : IDENT lfunc
+                   | IDENT udim
+                   | PAREN_EMPIEZA exprlog PAREN_TERMINA
+                   | CTE_ENTERA
+                   | CTE_REAL
+                   | CTE_ALFA
+                   | VERDADERO
+                   | FALSO
+        '''
+
+    def p_lproc(self, p):
+        'lproc : IDENT PAREN_EMPIEZA uparams PAREN_TERMINA'
+
+    def p_lfunc(self, p):
+        'lfunc : IDENT PAREN_EMPIEZA uparams PAREN_TERMINA'
+
+    def p_imprime(self, p):
+        'imprime : IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA'
+
+    def p_imprimenl(self, p):
+        'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA'
+
+    def p_lee(self, p):
+        '''lee : LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
+               | LEE PAREN_EMPIEZA IDENT dimens PAREN_TERMINA
+        '''
+
+
+
+
+    def p_gpoexp(self, p):
+        '''gpoexp : exprlog
+                  | exprlog COMA gpoexp
+        '''
+
+    def p_uparams(self, p):
+        '''uparams : exprlog
+                   | exprlog COMA uparams
+        '''
+
+    def p_uparamsEmpty(self, p):
+        'uparams : empty'
+
+
     def p_empty(self, p):
         'empty :'
-        print(p)
         pass
 
     # Error rule for syntax errors

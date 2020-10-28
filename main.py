@@ -19,9 +19,7 @@ else:
     syntax.build()
     # Read the source file
 
-    result = syntax.parser.parse("variables")
-    if result:
-        print(result)
+    result = syntax.parser.parse(file_.read())
 
 
 

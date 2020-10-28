@@ -1,10 +1,10 @@
 constantes PI:=3.141592;
 	   MAX:=3;
 
-variables i, j, k, n, vector[MAX], matriz[MAX][MAX]:=Entero;
+variables i, j, k, n:Entero;
           r, s, t:real;
           Alfa, Beta:Alfabetico;
-          Log1, Log2:Logicos;
+          Log1, Log2:Logicos; // Logicos o logico
 
 Funcion FacRec(n:Entero):Entero;
 Funcion FacIter(n:Entero):Entero;
