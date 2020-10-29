@@ -12,6 +12,7 @@ class Syntax(object):
         ('left', 'MOD'),
         ('left', 'MAS', 'MENOS'),
         ('left', 'MULTI', 'DIV'),
+        ('right', 'PROTOTIPOS'),
         ('left', 'PAREN_EMPIEZA', 'PAREN_TERMINA'),
     )
 
@@ -82,18 +83,32 @@ class Syntax(object):
     def p_grupoconstEmpty(self, p):
         'grupoconst : empty'
 
-    def p_protfuncproc(self, p):
-        '''protfuncproc : protfunc protfuncproc
-                        | protproc protfuncproc'''
+    def p_startproto(self, p):
+        'protfuncproc : PROTOTIPOS gpofuncproc FIN DE PROTOTIPOS PUNTO_COMA'
+        print("PROTOTIPOS")
 
-    def p_protfunprocEmpty(self, p):
+    def p_startprotoEmpty(self, p):
         'protfuncproc : empty'
+
+    def p_protfuncproc(self, p):
+        '''gpofuncproc : protfunc
+                        | protproc
+                        | protproc gpofuncproc
+                        | protfunc gpofuncproc
+                        '''
+
+
 
     def p_protfunc(self, p):
         'protfunc : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
 
+
+
     def p_protproc(self, p):
         'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'
+
+    def p_protprocEmpty(self, p):
+        'protproc : empty'
 
     def p_params(self, p):
         'params : gpopars PUNTOS_DOBLES TIPO otrospars'
@@ -166,13 +181,16 @@ class Syntax(object):
         'sino : empty'
 
     def p_bckesp(self, p):
-        'bckesp : estatuto INICIO block FIN'
+        '''bckesp : estatuto
+                  | INICIO block FIN'''
 
     def p_bckespEmpty(self, p):
         'bckesp : empty'
 
     def p_desde(self, p):
-        'desde : DESDE EL VALOR DE asigna HASTA expr bckesp'
+        '''desde : DESDE EL VALOR DE asigna HASTA expr INCR CTE_ENTERA bckesp
+                 | DESDE EL VALOR DE asigna HASTA expr DECR CTE_ENTERA bckesp
+        '''
 
     def p_repetir(self, p):
         'repetir : REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA'
@@ -185,6 +203,7 @@ class Syntax(object):
 
     def p_cuando(self, p):
         'cuando : CUANDO EL VALOR DE IDENT INICIO gposea otro FIN'
+        print("cuando")
 
     def p_otro(self, p):
         'otro : OTRO PUNTOS_DOBLES bckesp'
@@ -228,6 +247,7 @@ class Syntax(object):
     def p_opy(self, p):
         '''opy : opno
                | opno Y opy
+
         '''
 
     def p_opno(self, p):
@@ -250,9 +270,10 @@ class Syntax(object):
 
     def p_multi(self, p):
         '''multi : expo
-                 | expo MULTI
-                 | expo DIV
+                 | expo MULTI multi
+                 | expo DIV multi
                  | expo MOD multi
+                 | empty
         '''
 
     def p_expo(self, p):
@@ -266,7 +287,8 @@ class Syntax(object):
         '''
 
     def p_termino(self, p):
-        '''termino : IDENT lfunc
+        '''termino : IDENT
+                   | IDENT lfunc
                    | IDENT udim
                    | PAREN_EMPIEZA exprlog PAREN_TERMINA
                    | CTE_ENTERA
@@ -275,6 +297,8 @@ class Syntax(object):
                    | VERDADERO
                    | FALSO
         '''
+
+
 
     def p_lproc(self, p):
         'lproc : IDENT PAREN_EMPIEZA uparams PAREN_TERMINA'
