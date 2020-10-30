@@ -3,6 +3,7 @@ from lex_analyzer import Lexer
 
 class Syntax(object):
     tokens = Lexer.tokens
+    line_analyzing = list()
     precedence = (
         ('right', 'IDENT', 'INICIO', 'SI', 'MIENTRAS'),
         ('right', 'PROCEDIMIENTO', 'FUNCION'),
@@ -13,7 +14,8 @@ class Syntax(object):
         ('left', 'MAS', 'MENOS'),
         ('left', 'MULTI', 'DIV'),
         ('right', 'PROTOTIPOS'),
-        ('left', 'PAREN_EMPIEZA', 'PAREN_TERMINA'),
+        ('left', 'PAREN_TERMINA'),
+        ('right', 'PAREN_EMPIEZA',)
     )
 
     def p_programa(self, p):
@@ -146,13 +148,20 @@ class Syntax(object):
         'funcion : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA'
 
     def p_block(self, p):
-        'block : estatuto PUNTO_COMA block'
+        'block : estatuto puntoc block'
+        print("block linea: ")
+
+    def p_closeStatement(self, p):
+        'puntoc : PUNTO_COMA'
+        print("puntoc")
+
 
     def p_blockEmpty(self, p):
         'block : empty'
 
     def p_estatuto(self, p):
         '''estatuto : si
+                    | lfunc
                     | LIMPIA
                     | desde
                     | repetir
@@ -160,13 +169,13 @@ class Syntax(object):
                     | cuando
                     | regresa
                     | asigna
-                    | lproc
                     | imprime
                     | imprimenl
                     | lee
                     | INTERRUMPE
                     | CONTINUA
         '''
+        #print("estatuto")
 
     def p_estatutoEmpty(self, p):
         'estatuto : empty'
@@ -194,6 +203,7 @@ class Syntax(object):
 
     def p_repetir(self, p):
         'repetir : REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA'
+        print("repetir")
 
     def p_mientras(self, p):
         'mientras : MIENTRAS SE CUMPLA QUE exprlog bckesp'
@@ -230,19 +240,15 @@ class Syntax(object):
         'regresa : REGRESA PAREN_EMPIEZA exprlog PAREN_TERMINA'
 
     def p_udim(self, p):
-        'udim : expr udim '
-
-    def p_udimEmpty(self, p):
-        'udim : empty'
+        '''udim : expr udim
+                | empty
+        '''
 
     def p_exprlog(self, p):
-        'exprlog : opy o'
-
-    def p_o(self, p):
-        'o : O exprlog'
-
-    def p_oEmpty(self, p):
-        'o : empty'
+        '''exprlog : opy
+                   | opy O exprlog
+        '''
+        print("he")
 
     def p_opy(self, p):
         '''opy : opno
@@ -285,32 +291,41 @@ class Syntax(object):
         '''signo : termino
                  | MENOS termino
         '''
+        print("signo")
 
     def p_termino(self, p):
         '''termino : IDENT
                    | IDENT lfunc
                    | IDENT udim
-                   | PAREN_EMPIEZA exprlog PAREN_TERMINA
                    | CTE_ENTERA
                    | CTE_REAL
                    | CTE_ALFA
                    | VERDADERO
                    | FALSO
         '''
+        print("termino")
 
-
-
-    def p_lproc(self, p):
-        'lproc : IDENT PAREN_EMPIEZA uparams PAREN_TERMINA'
+    def p_term(self, p):
+        '''termino : PAREN_EMPIEZA exprlog PAREN_TERMINA
+        '''
+        print("other ttterrrm")
 
     def p_lfunc(self, p):
-        'lfunc : IDENT PAREN_EMPIEZA uparams PAREN_TERMINA'
+        'lfunc : IDENT parenemp uparams PAREN_TERMINA'
+        print("lfunc")
+
+    def p_lfunc_error(self, p):
+        'lfunc : IDENT parenemp error PAREN_TERMINA'
+        print("Syntax error. Expecting logical expression in function call")
+
+    def p_parenEmpieza(self, p):
+        'parenemp : PAREN_EMPIEZA'
 
     def p_imprime(self, p):
         'imprime : IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA'
 
     def p_imprimenl(self, p):
-        'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA'
+        'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA '
 
     def p_lee(self, p):
         '''lee : LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
@@ -325,13 +340,12 @@ class Syntax(object):
                   | exprlog COMA gpoexp
         '''
 
+
     def p_uparams(self, p):
         '''uparams : exprlog
                    | exprlog COMA uparams
         '''
-
-    def p_uparamsEmpty(self, p):
-        'uparams : empty'
+        print("yessss")
 
 
     def p_empty(self, p):

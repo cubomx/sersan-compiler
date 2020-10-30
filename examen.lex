@@ -436,12 +436,14 @@
 <PAREN_EMPIEZA> : (
 <IDENT> : n
 <COMA> : ,
-<IDENT> : valor
+<VALOR> : valor
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <IDENT> : ImpMat
 <PAREN_EMPIEZA> : (
 <IDENT> : n
+<COMA> : ,
+<INTERRUMPE> : interrumpe
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <FIN> : Fin
@@ -461,6 +463,7 @@
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
 <HASTA> : hasta
+<INCR> : incr
 <CTE-ENTERA> : 10
 <INICIO> : Inicio
 <SI> : Si
@@ -470,7 +473,7 @@
 <CTE-ENTERA> : 5
 <PAREN_TERMINA> : )
 <HACER> : hacer
-<IDENT> : continua
+<CONTINUA> : continua
 <PUNTO_COMA> : ;
 <IMPRIMENL> : Imprimenl
 <PAREN_EMPIEZA> : (
@@ -493,7 +496,7 @@
 <CTE-ENTERA> : 7
 <PAREN_TERMINA> : )
 <HACER> : hacer
-<IDENT> : interrumpe
+<INTERRUMPE> : interrumpe
 <PUNTO_COMA> : ;
 <HASTA> : hasta
 <QUE> : que
@@ -615,7 +618,7 @@
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
 <HASTA> : hasta
-<IDENT> : k
+<IDENT> : e
 <IMPRIMENL> : Imprimenl
 <PAREN_EMPIEZA> : (
 <COMA> : ,

@@ -79,12 +79,12 @@ Inicio
    Impvec(n);
    LeeMat(n);
    MulMat(n, valor);
-   ImpMat(n);
+   ImpMat(n, interrumpe);
 Fin de Procedimiento;
 
 Procedimiento Test()
 Inicio
-   Desde el valor de i:= 1 hasta 10
+   Desde el valor de i:= 1 hasta incr 10
    Inicio
      Si (i=5)  hacer continua;
      Imprimenl("i= ", i);
@@ -115,7 +115,7 @@ Fin de Procedimiento;
 
 Procedimiento ImpVec(k:Entero)
 Inicio
-   Desde el valor de i:=1 hasta k
+   Desde el valor de i:=1 hasta e
       Imprimenl("Vector[",i,"]= ", Vector[i]);
 Fin de Procedimiento;
 

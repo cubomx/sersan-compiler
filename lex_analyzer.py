@@ -1,5 +1,4 @@
 import ply.lex as lex
-from ply import yacc
 
 
 class Lexer(object):
@@ -128,68 +127,68 @@ class Lexer(object):
         return t
 
     def t_LEE(self, t):
-        r'[l|L]ee(?![^\(\s])'
+        r'[l|L]ee(?![a-zA-Z0-9])'
         self.add_lex('LEE', t.value)
         return t
 
     def t_INTERRUMPE(self, t):
-        r'[i|I]nterrumpe(?![\S])'
+        r'[i|I]nterrumpe(?![a-zA-Z0-9])'
         self.add_lex('INTERRUMPE', t.value)
         return t
 
     def t_CONTINUA(self, t):
-        r'[c|C]ontinua(?![\S])'
+        r'[c|C]ontinua(?![a-zA-Z0-9])'
         self.add_lex('CONTINUA', t.value)
         return t
 
     def t_HACER(self, t):
-        r'[h|H]acer(?![\S])'
+        r'[h|H]acer(?![a-zA-Z0-9])'
         self.add_lex('HACER', t.value)
         return t
 
     def t_SINO(self, t):
-        r'[s|S]ino(?![\S])'
+        r'[s|S]ino(?![a-zA-Z0-9])'
         self.add_lex('SINO', t.value)
         return t
 
     def t_EL(self, t):
-        r'[e|E]l(?![\S])'
+        r'[e|E]l(?![a-zA-Z0-9])'
         self.add_lex('EL', t.value)
         return t
 
     def t_VALOR(self, t):
-        r'[v|V]alor(?![\S])'
+        r'[v|V]alor(?![a-zA-Z0-9])'
         self.add_lex('VALOR', t.value)
         return t
 
     def t_HASTA(self, t):
-        r'[h|H]asta(?![\S])'
+        r'[h|H]asta(?![a-zA-Z0-9])'
         self.add_lex('HASTA', t.value)
         return t
 
     def t_QUE(self, t):
-        r'[q|Q]ue(?![\S])'
+        r'[q|Q]ue(?![a-zA-Z0-9])'
         self.add_lex('QUE', t.value)
         return t
 
     def t_SE(self, t):
-        r'[S|s]e(?![\S])'
+        r'[S|s]e(?![a-zA-Z0-9])'
         self.add_lex('SE', t.value)
         return t
 
     def t_CUMPLA(self, t):
-        r'[c|C]umpla(?![\S])'
+        r'[c|C]umpla(?![a-zA-Z0-9])'
         self.add_lex('CUMPLA', t.value)
         return t
 
     def t_SEA(self, t):
-        r'[s|S]ea(?![\S])'
+        r'[s|S]ea(?![a-zA-Z0-9])'
         self.add_lex('SEA', t.value)
         return t
 
 
     def t_OTRO(self, t):
-        r'[o|O]tro(?![^:\S])'
+        r'[o|O]tro(?![a-zA-Z0-9])'
         self.add_lex('OTRO', t.value)
         return t
 
