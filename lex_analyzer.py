@@ -3,7 +3,7 @@ import ply.lex as lex
 
 class Lexer(object):
     tokens = (
-    'IDENT', 'OP_ARIT', 'CTE_REAL', 'OP_LOG', 'CTE_ALFA', 'PAL_RES', 'OP_REL', 'CTE_ENTERA', 'COMMENT', 'CTE_REAL_NON_NUM',
+    'IDENT', 'CTE_REAL',  'CTE_ALFA',  'OP_REL', 'CTE_ENTERA', 'COMMENT', 'CTE_REAL_NON_NUM',
     'CTE_REAL_ENDING_BAD', 'CTE_ENTERA_NON_NUM', 'VARIABLES', 'CONSTANTES', 'OP_ASIG', 'TIPO','PAREN_EMPIEZA', 'PAREN_TERMINA', 'CORCHETE_EMPIEZA',
     'CORCHETE_TERMINA', 'PUNTOS_DOBLES', 'PUNTO_COMA', 'PUNTO', 'COMA', 'FIN', 'DE', 'PROGRAMA', 'FUNCION', 'PROCEDIMIENTO', 'INICIO', 'LIMPIA',
     'SI', 'DESDE', 'REPETIR', 'MIENTRAS', 'CUANDO', 'REGRESA', 'IMPRIME', 'IMPRIMENL', 'LEE', 'INTERRUMPE', 'CONTINUA', 'HACER', 'SINO', 'EL',
@@ -37,17 +37,17 @@ class Lexer(object):
         return t
 
     def t_TIPO(self, t):
-        r'[a|A]lfabetico(?![a-zA-Z0-9])|[l|L]ogico(?![a-zA-Z0-9])|[e|E]ntero(?![a-zA-Z0-9])|[R|r]eal(?![a-zA-Z0-9])'
+        r'[a|A]lfabetico(?![a-zA-Z0-9])|[e|E]ntero(?![a-zA-Z0-9])|[l|L]ogico(?![a-zA-Z0-9])|[r|R]eal(?![a-zA-Z0-9])'
         self.add_lex('TIPO', t.value)
         return t
 
     def t_CONSTANTES(self, t):
-        r'[c|C]onstantes(?![\S])'
+        r'[c|C]onstantes(?![a-zA-Z0-9])'
         self.add_lex('CONSTANTE', t.value)
         return t
 
     def t_VARIABLES(self, t):
-        r'[V|v]ariables(?![\S])'
+        r'[V|v]ariables(?![a-zA-Z0-9])'
         self.add_lex('VARIABLES', t.value)
         return t
 
@@ -57,62 +57,62 @@ class Lexer(object):
         return t
 
     def t_FIN(self, t):
-        r'[f|F]in(?![^;^ \S])'
+        r'[f|F]in(?![a-zA-Z0-9])'
         self.add_lex('FIN', t.value)
         return t
 
     def t_DE(self, t):
-        r'[d|D]e(?![\S])'
+        r'[d|D]e(?![a-zA-Z0-9])'
         self.add_lex('DE', t.value)
         return t
 
     def t_FUNCION(self, t):
-        r'[f|F]uncion(?![^;^ \s])'
+        r'[f|F]uncion(?![a-zA-Z0-9])'
         self.add_lex('FUNCION', t.value)
         return t
 
     def t_PROCEDIMIENTO(self, t):
-        r'[p|P]rocedimiento(?![^;^ \s])'
+        r'[p|P]rocedimiento(?![a-zA-Z0-9])'
         self.add_lex('PROCEDIMIENTO', t.value)
         return t
 
     def t_INICIO(self, t):
-        r'[i|I]nicio(?![\S])'
+        r'[i|I]nicio(?![a-zA-Z0-9])'
         self.add_lex('INICIO', t.value)
         return t
 
     def t_LIMPIA(self, t):
-        r'[l|L]impia(?![\S])'
+        r'[l|L]impia(?![a-zA-Z0-9])'
         self.add_lex('LIMPIA', t.value)
         return t
 
     def t_SI(self, t):
-        r'[s|S]i(?![\S])'
+        r'[s|S]i(?![a-zA-Z0-9])'
         self.add_lex('SI', t.value)
         return t
 
     def t_DESDE(self, t):
-        r'[d|D]esde(?![\S])'
+        r'[d|D]esde(?![a-zA-Z0-9])'
         self.add_lex('DESDE', t.value)
         return t
 
     def t_REPETIR(self, t):
-        r'[r|R]epetir(?![\S])'
+        r'[r|R]epetir(?![a-zA-Z0-9])'
         self.add_lex('REPETIR', t.value)
         return t
 
     def t_MIENTRAS(self, t):
-        r'[m|M]ientras(?![\S])'
+        r'[m|M]ientras(?![a-zA-Z0-9])'
         self.add_lex('MIENTRAS', t.value)
         return t
 
     def t_CUANDO(self, t):
-        r'[c|C]uando(?![\S])'
+        r'[c|C]uando(?![a-zA-Z0-9])'
         self.add_lex('CUANDO', t.value)
         return t
 
     def t_REGRESA(self, t):
-        r'[r|R]egresa(?![^\(\S])'
+        r'[r|R]egresa(?![a-zA-Z0-9])'
         self.add_lex('REGRESA', t.value)
         return t
 
@@ -293,7 +293,7 @@ class Lexer(object):
         return t
 
     def t_CORCHETE_TERMINA(self, t):
-        r'\['
+        r'\]'
         self.add_lex('CORCHETE_TERMINA', t.value)
         return t
 

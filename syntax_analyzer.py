@@ -14,12 +14,21 @@ class Syntax(object):
         ('left', 'MAS', 'MENOS'),
         ('left', 'MULTI', 'DIV'),
         ('right', 'PROTOTIPOS'),
+        ('left', 'CORCHETE_EMPIEZA', 'CORCHETE_TERMINA'),
         ('left', 'PAREN_TERMINA'),
-        ('right', 'PAREN_EMPIEZA',)
+        ('left', 'PAREN_EMPIEZA'),
+        ('right', 'PUNTO_COMA'),
+        ('left', 'FIN')
+
     )
 
+    def __init__(self, filename):
+        self.file_name = filename
+        open(self.file_name + ".err", 'w').close()
+        self.err_file = open(self.file_name + ".err", "a")
+
     def p_programa(self, p):
-        'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA'
+        'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA PUNTO'
 
     def p_variables(self, p):
         'variables : VARIABLES gpovars'
@@ -48,6 +57,7 @@ class Syntax(object):
 
     def p_dimens(self, p):
         'dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens'
+        print("dimension")
 
     def p_dimensEmpty(self, p):
         'dimens : empty'
@@ -148,16 +158,18 @@ class Syntax(object):
         'funcion : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA'
 
     def p_block(self, p):
-        'block : estatuto puntoc block'
+        '''block : estatuto PUNTO_COMA block
+                 | estatuto PUNTO_COMA
+        '''
         print("block linea: ")
 
-    def p_closeStatement(self, p):
-        'puntoc : PUNTO_COMA'
-        print("puntoc")
+    def p_semicolon(self, p):
+        '''block : estatuto
+                 | estatuto block
+        '''
+        print("Expecting semi-colon at the end of line", p.lineno(1))
 
 
-    def p_blockEmpty(self, p):
-        'block : empty'
 
     def p_estatuto(self, p):
         '''estatuto : si
@@ -183,6 +195,7 @@ class Syntax(object):
     def p_si(self, p):
         'si : SI PAREN_EMPIEZA exprlog PAREN_TERMINA HACER bckesp sino'
 
+
     def p_sino(self, p):
         'sino : SINO bckesp'
 
@@ -191,15 +204,28 @@ class Syntax(object):
 
     def p_bckesp(self, p):
         '''bckesp : estatuto
-                  | INICIO block FIN'''
+                  | INICIO block FIN
+                  |'''
 
-    def p_bckespEmpty(self, p):
-        'bckesp : empty'
+
 
     def p_desde(self, p):
-        '''desde : DESDE EL VALOR DE asigna HASTA expr INCR CTE_ENTERA bckesp
-                 | DESDE EL VALOR DE asigna HASTA expr DECR CTE_ENTERA bckesp
+        '''desde : DESDE EL VALOR DE asigna HASTA expr DECR CTE_ENTERA bckesp
+                 | DESDE EL VALOR DE asigna HASTA expr INCR CTE_ENTERA bckesp
         '''
+        print("buen desde")
+
+    def p_desde_error(self, p):
+        '''desde : DESDE EL VALOR DE asigna HASTA expr error bckesp'''
+        print("Not increment/decrement value in line ", p.lineno(1))
+        self.add_err("Not increment/decrement value in line ", '', p.lineno(1))
+
+    '''def p_desde_error2(self, p):
+        desde : DESDE error bckesp
+        '
+        print("Bad scripture of 'DESDE' block")'''
+
+
 
     def p_repetir(self, p):
         'repetir : REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA'
@@ -269,8 +295,8 @@ class Syntax(object):
 
     def p_expr(self, p):
         '''expr : multi
-                | MAS expr
-                | MENOS expr
+                | multi MAS expr
+                | multi MENOS expr
         '''
 
 
@@ -295,8 +321,8 @@ class Syntax(object):
 
     def p_termino(self, p):
         '''termino : IDENT
-                   | IDENT lfunc
-                   | IDENT udim
+                   | IDENT dimens
+                   | lfunc
                    | CTE_ENTERA
                    | CTE_REAL
                    | CTE_ALFA
@@ -305,11 +331,6 @@ class Syntax(object):
         '''
         print("termino")
 
-    def p_term(self, p):
-        '''termino : PAREN_EMPIEZA exprlog PAREN_TERMINA
-        '''
-        print("other ttterrrm")
-
     def p_lfunc(self, p):
         'lfunc : IDENT parenemp uparams PAREN_TERMINA'
         print("lfunc")
@@ -317,6 +338,7 @@ class Syntax(object):
     def p_lfunc_error(self, p):
         'lfunc : IDENT parenemp error PAREN_TERMINA'
         print("Syntax error. Expecting logical expression in function call")
+        self.add_err('Expecting logical expression in function call', str(3), p.lineno(3))
 
     def p_parenEmpieza(self, p):
         'parenemp : PAREN_EMPIEZA'
@@ -326,6 +348,11 @@ class Syntax(object):
 
     def p_imprimenl(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA '
+
+    def p_imprimenl_error(self, p):
+        'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp error'
+        print("Missing parenthesis at end of IMPRIMENL statement ", p.lineno(3))
+        self.add_err("Missing parenthesis at end of IMPRIMENL statement ", '', p.lineno(2))
 
     def p_lee(self, p):
         '''lee : LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
@@ -354,14 +381,21 @@ class Syntax(object):
 
     # Error rule for syntax errors
     def p_error(self, p):
+
         if p:
             print("Syntax error at token", p.type)
             print("Syntax error at '%s'" % p.value)
             print("line : '%s'" % p.lineno)
             print("column: '%s'" % p.lexpos)
+            self.add_err("Syntax error", p.value, p.lineno)
         else:
             print("Syntax error at EOF")
 
+
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs)
+
+    # Append to the .err file the errors that may be found
+    def add_err(self, lex_error, val, line):
+        self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
 

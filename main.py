@@ -15,7 +15,7 @@ else:
     lex_ = Lexer(file_name.split(".")[0])
     lex_.build_lex()
 
-    syntax = Syntax()
+    syntax = Syntax(file_name.split(".")[0])
     syntax.build()
     # Read the source file
 

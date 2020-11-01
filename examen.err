@@ -1,0 +1,21 @@
+err: Syntax error[limpia] in line 82
+err: Expecting logical expression in function call[3] in line 82
+err: Syntax error[Imprimenl] in line 119
+err: Not increment/decrement value in line [] in line 118
+err: Syntax error[Desde] in line 125
+err: Syntax error[Inicio] in line 126
+err: Not increment/decrement value in line [] in line 125
+err: Not increment/decrement value in line [] in line 124
+err: Syntax error[Desde] in line 135
+err: Syntax error[Matriz] in line 136
+err: Not increment/decrement value in line [] in line 135
+err: Not increment/decrement value in line [] in line 134
+err: Syntax error[Desde] in line 142
+err: Syntax error[Imprimenl] in line 143
+err: Syntax error[;] in line 143
+err: Missing parenthesis at end of IMPRIMENL statement [] in line 143
+err: Not increment/decrement value in line [] in line 142
+err: Not increment/decrement value in line [] in line 141
+err: Syntax error[;] in line 151
+err: Missing parenthesis at end of IMPRIMENL statement [] in line 151
+err: Syntax error[imprime] in line 155

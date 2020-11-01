@@ -1,7 +1,7 @@
 constantes PI:=3.141592;
 	   MAX:=3;
 
-variables i, j, k, n:Entero;
+variables i, j, k, n, matriz[i][j]:Entero;
           r, s, t:real;
           Alfa, Beta:Alfabetico;
           Log1, Log2:Logico;
@@ -56,7 +56,7 @@ Fin de Funcion;
 
 Funcion Concat(a, b:alfabetico):Alfabetico
 Inicio
-   regresa(a + " " + b);
+   regresa(a + 2 + b);
 Fin de Funcion;
 
 Funcion Compara(a, b:real;opc:entero):Logico
@@ -78,13 +78,13 @@ Inicio
    OrdVec(n);
    Impvec(n);
    LeeMat(n);
-   MulMat(n, valor);
-   ImpMat(n, interrumpe);
+   MulMat(n, e);
+   ImpMat(n, limpia);
 Fin de Procedimiento;
 
 Procedimiento Test()
 Inicio
-   Desde el valor de i:= 1 hasta incr 10
+   Desde el valor de i:= 1 hasta n incr 10
    Inicio
      Si (i=5)  hacer continua;
      Imprimenl("i= ", i);
@@ -98,9 +98,9 @@ Fin de Procedimiento;
 
 Procedimiento LeeVec(k:Entero)
 Inicio
-   Desde el valor de i:=1 hata n
+   Desde el valor de i:=1 hasta n incr 2
    Inicio
-      Imprime("Vector[", i, "]: ");
+      Imprime("Vector[", i, "]: ")
       Lee(Vector[i]);
    Fin;
 Fin de Procedimiento;
@@ -108,8 +108,8 @@ Fin de Procedimiento;
 Procedimiento OrdVec(k:entero)
 Variables Temp:Entero;
 Inicio
-   Desde el valor de i:=1 hasta (k-1)
-      Desde el valor de j:=i+1 hasta k
+   Desde el valor de i:=1 hasta k-1 incr 10
+      Desde el valor de j:=i+1 hasta k incr 10
          Si (Vector[i]>Vector[j]) hacer
 Fin de Procedimiento;
 
@@ -140,7 +140,7 @@ Procedimiento ImpMat(k:Entero)
 Inicio
    Desde el valor de i:=1 hasta k
       Desde el valor de j:=1 hasta k
-         Imprimenl("Matriz[", i, "][", j, "]= ", Matriz[i][j]);
+         Imprimenl("Matriz[", i, "][", j, "]= ", Matriz[i][j];
 Fin de Procedimiento;
 
 Programa
@@ -152,7 +152,7 @@ Programa
    Imprimenl("Es el radio= ", r, " mayor que Altura= ", s, " ? ", Compara(r, s, 2));
    LeeVecmat();
    Imprime("Dame tu nombre: ");
-   Lee(alfa);
+   Lee(imprime);
    Imprime("Dame tu Apellido: ");
    Lee(beta);
    Imprimenl("Hola ", Concat(alfa, beta), " ya la pasaste!!!");
