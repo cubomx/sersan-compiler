@@ -3,6 +3,7 @@ from lex_analyzer import Lexer
 
 class Syntax(object):
     tokens = Lexer.tokens
+    estatutos = Lexer.estatutos
     line_analyzing = list()
     precedence = (
         ('right', 'IDENT', 'INICIO', 'SI', 'MIENTRAS'),
@@ -56,11 +57,9 @@ class Syntax(object):
         'gpoids : empty'
 
     def p_dimens(self, p):
-        'dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens'
+        '''dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens
+                  |'''
         print("dimension")
-
-    def p_dimensEmpty(self, p):
-        'dimens : empty'
 
     def p_opasig1(self, p):
         'opasig : OP_ASIG CTE_ENTERA'
@@ -72,8 +71,7 @@ class Syntax(object):
         'opasig : empty'
 
     def p_valor(self, p):
-        '''valor : CTE_ENTERA
-                 | IDENT
+        '''valor : exprlog
         '''
 
     def p_constantes(self, p):
@@ -158,16 +156,20 @@ class Syntax(object):
         'funcion : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA'
 
     def p_block(self, p):
-        '''block : estatuto PUNTO_COMA block
-                 | estatuto PUNTO_COMA
+        '''block : estatuto puntoc block
+                 | estatuto puntoc
         '''
         print("block linea: ")
 
+    def p_puntoc(self, p):
+        'puntoc : PUNTO_COMA'
+
     def p_semicolon(self, p):
-        '''block : estatuto
-                 | estatuto block
+        '''block : estatuto error
+                 | estatuto error block
         '''
-        print("Expecting semi-colon at the end of line", p.lineno(1))
+        print("Expecting semi-colon at the end of line", p.lineno(0))
+
 
 
 
@@ -266,7 +268,7 @@ class Syntax(object):
         'regresa : REGRESA PAREN_EMPIEZA exprlog PAREN_TERMINA'
 
     def p_udim(self, p):
-        '''udim : expr udim
+        '''udim : CORCHETE_EMPIEZA expr CORCHETE_TERMINA udim
                 | empty
         '''
 
@@ -321,7 +323,7 @@ class Syntax(object):
 
     def p_termino(self, p):
         '''termino : IDENT
-                   | IDENT dimens
+                   | IDENT udim
                    | lfunc
                    | CTE_ENTERA
                    | CTE_REAL

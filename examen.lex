@@ -677,6 +677,8 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : n
+<INCR> : incr
+<CTE-ENTERA> : 1
 <INICIO> : Inicio
 <IMPRIME> : Imprime
 <PAREN_EMPIEZA> : (
@@ -726,6 +728,8 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : k
+<INCR> : incr
+<CTE-ENTERA> : 10
 <DESDE> : Desde
 <EL> : el
 <VALOR> : valor
@@ -735,6 +739,8 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : k
+<INCR> : incr
+<CTE-ENTERA> : 10
 <IDENT> : Matriz
 <CORCHETE_EMPIEZA> : [
 <IDENT> : i
