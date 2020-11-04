@@ -45,12 +45,33 @@ class Syntax(object):
     def p_gpovarsEmpty(self, p):
         'gpovars : empty'
 
+    def p_gpovars_error1(self, p):
+        '''gpovars : gpoids error TIPO PUNTO_COMA gpovars
+                   | gpoids error TIPO PUNTO_COMA
+        '''
+        print("Missing ':' after variable declaration")
+        self.add_err("Missing ':' after variable declaration", '', p.lineno(2))
+
+    def p_gpovars_error2(self, p):
+        '''gpovars : gpoids PUNTOS_DOBLES error PUNTO_COMA gpovars
+                   | gpoids PUNTOS_DOBLES error PUNTO_COMA
+        '''
+        print("Missing <type> in variable definition")
+        self.add_err("Missing <type> in variable definition", '', p.lineno(4))
+
     def p_gpoids(self, p):
         '''gpoids : IDENT dimens COMA gpoids
-                  | IDENT dimens
                   | IDENT opasig COMA gpoids
+                  | IDENT dimens
                   | IDENT COMA gpoids
                   '''
+    def p_gopids(self, p):
+        '''gpoids : IDENT dimens error gpoids
+                  | IDENT error gpoids
+                  | IDENT opasig error gpoids
+        '''
+        print("Missing ',' between individual variable declaration")
+        self.add_err("Missing ',' between individual variable declaration", '', p.lineno(2))
 
 
     def p_gpoidsEmpty(self, p):
@@ -60,6 +81,15 @@ class Syntax(object):
         '''dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens
                   |'''
         print("dimension")
+
+    def p_dimens_error1(self, p):
+        '''dimens : CORCHETE_EMPIEZA valor error dimens'''
+        self.add_err("Missing ']' to close dimensions", '', p.lineno(1))
+
+    def p_dimens_erro2(self, p):
+        '''dimens : error valor CORCHETE_TERMINA dimens'''
+        self.add_err("Missing '[' of dimension", '', p.lineno(3))
+
 
     def p_opasig1(self, p):
         'opasig : OP_ASIG CTE_ENTERA'
@@ -107,15 +137,19 @@ class Syntax(object):
                         | protfunc gpofuncproc
                         '''
 
-
-
     def p_protfunc(self, p):
         'protfunc : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
 
-
+    def p_protfunc_error1(self, p):
+        'protfunc : FUNCION error PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
+        self.add_err("Missing identifier on function prototype", '', p.lineno(1))
 
     def p_protproc(self, p):
         'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'
+
+    def p_protproc_error1(self, p):
+        'protproc : PROCEDIMIENTO error PAREN_EMPIEZA params PAREN_TERMINA  PUNTO_COMA'
+        self.add_err("Missing identifer on procedure prototype", '', p.lineno(1))
 
     def p_protprocEmpty(self, p):
         'protproc : empty'
@@ -126,6 +160,14 @@ class Syntax(object):
     def p_paramsEmpty(self, p):
         'params : empty'
 
+    def p_params_error1(self, p):
+        'params : gpopars PUNTOS_DOBLES error otrospars'
+        self.add_err("Missing <type> of param", '', p.lineno(2))
+
+    def p_params_error2(self, p):
+        'params : gpopars error TIPO otrospars'
+        self.add_err("Missing ':' before type of param", '', p.lineno(1))
+
     def p_params2(self, p):
         'otrospars : PUNTO_COMA params'
 
@@ -133,13 +175,9 @@ class Syntax(object):
         'otrospars : empty'
 
     def p_gpopars(self, p):
-        'gpopars : IDENT maspars'
-
-    def p_maspars(self, p):
-        'maspars : COMA gpopars'
-
-    def p_masparsEmpty(self, p):
-        'maspars : empty'
+        '''gpopars : IDENT COMA gpopars
+                   | IDENT
+        '''
 
     def p_funcproc(self, p):
         '''funcproc : procedimiento funcproc
@@ -151,6 +189,8 @@ class Syntax(object):
 
     def p_procedimiento(self, p):
         'procedimiento : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA variables INICIO block FIN DE PROCEDIMIENTO PUNTO_COMA'
+
+
 
     def p_funcion(self, p):
         'funcion : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA'
@@ -168,9 +208,8 @@ class Syntax(object):
         '''block : estatuto error
                  | estatuto error block
         '''
-        print("Expecting semi-colon at the end of line", p.lineno(0))
-
-
+        print("Expecting semi-colon at the end of line")
+        self.add_err("Expecting semi-colon at the end of line", '', -1)
 
 
     def p_estatuto(self, p):
@@ -399,5 +438,9 @@ class Syntax(object):
 
     # Append to the .err file the errors that may be found
     def add_err(self, lex_error, val, line):
-        self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
+        if line == -1:
+            self.err_file.write("err: " + lex_error + "\n")
+        else:
+            self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
+
 

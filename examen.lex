@@ -5,7 +5,7 @@
 <PUNTO_COMA> : ;
 <IDENT> : MAX
 <OP-ASIG> : :=
-<CTE-ENTERA> : 3
+<CTE-ENTERA> : 30
 <PUNTO_COMA> : ;
 <VARIABLES> : variables
 <IDENT> : i
@@ -16,12 +16,17 @@
 <COMA> : ,
 <IDENT> : n
 <COMA> : ,
+<IDENT> : vector
+<CORCHETE_EMPIEZA> : [
+<IDENT> : MAX
+<CORCHETE_TERMINA> : ]
+<COMA> : ,
 <IDENT> : matriz
 <CORCHETE_EMPIEZA> : [
-<IDENT> : i
+<IDENT> : MAX
 <CORCHETE_TERMINA> : ]
 <CORCHETE_EMPIEZA> : [
-<IDENT> : j
+<IDENT> : MAX
 <CORCHETE_TERMINA> : ]
 <PUNTOS_DOBLES> : :
 <TIPO> : Entero
@@ -105,6 +110,14 @@
 <IDENT> : k
 <COMA> : ,
 <IDENT> : v
+<PUNTOS_DOBLES> : :
+<TIPO> : Entero
+<PAREN_TERMINA> : )
+<PUNTO_COMA> : ;
+<PROCEDIMIENTO> : Procedimiento
+<IDENT> : ImpMat
+<PAREN_EMPIEZA> : (
+<IDENT> : K
 <PUNTOS_DOBLES> : :
 <TIPO> : Entero
 <PAREN_TERMINA> : )
@@ -334,7 +347,7 @@
 <PAREN_EMPIEZA> : (
 <IDENT> : a
 <MAS> : +
-<CTE-ENTERA> : 2
+<CTE-ALFA> : " "
 <MAS> : +
 <IDENT> : b
 <PAREN_TERMINA> : )
@@ -444,14 +457,12 @@
 <PAREN_EMPIEZA> : (
 <IDENT> : n
 <COMA> : ,
-<IDENT> : e
+<VALOR> : valor
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <IDENT> : ImpMat
 <PAREN_EMPIEZA> : (
 <IDENT> : n
-<COMA> : ,
-<LIMPIA> : limpia
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <FIN> : Fin
@@ -471,8 +482,6 @@
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
 <HASTA> : hasta
-<IDENT> : n
-<INCR> : incr
 <CTE-ENTERA> : 10
 <INICIO> : Inicio
 <SI> : Si
@@ -534,10 +543,8 @@
 <IDENT> : i
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
-<HASTA> : hasta
+<IDENT> : hata
 <IDENT> : n
-<INCR> : incr
-<CTE-ENTERA> : 2
 <INICIO> : Inicio
 <IMPRIME> : Imprime
 <PAREN_EMPIEZA> : (
@@ -547,6 +554,7 @@
 <COMA> : ,
 <CTE-ALFA> : "]: "
 <PAREN_TERMINA> : )
+<PUNTO_COMA> : ;
 <LEE> : Lee
 <PAREN_EMPIEZA> : (
 <IDENT> : Vector
@@ -582,11 +590,11 @@
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
 <HASTA> : hasta
+<PAREN_EMPIEZA> : (
 <IDENT> : k
 <MENOS> : -
 <CTE-ENTERA> : 1
-<INCR> : incr
-<CTE-ENTERA> : 10
+<PAREN_TERMINA> : )
 <DESDE> : Desde
 <EL> : el
 <VALOR> : valor
@@ -598,8 +606,6 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : k
-<INCR> : incr
-<CTE-ENTERA> : 10
 <SI> : Si
 <PAREN_EMPIEZA> : (
 <IDENT> : Vector
@@ -633,7 +639,7 @@
 <OP-ASIG> : :=
 <CTE-ENTERA> : 1
 <HASTA> : hasta
-<IDENT> : e
+<IDENT> : k
 <IMPRIMENL> : Imprimenl
 <PAREN_EMPIEZA> : (
 <COMA> : ,
@@ -677,8 +683,6 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : n
-<INCR> : incr
-<CTE-ENTERA> : 1
 <INICIO> : Inicio
 <IMPRIME> : Imprime
 <PAREN_EMPIEZA> : (
@@ -728,8 +732,6 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : k
-<INCR> : incr
-<CTE-ENTERA> : 10
 <DESDE> : Desde
 <EL> : el
 <VALOR> : valor
@@ -739,8 +741,6 @@
 <CTE-ENTERA> : 1
 <HASTA> : hasta
 <IDENT> : k
-<INCR> : incr
-<CTE-ENTERA> : 10
 <IDENT> : Matriz
 <CORCHETE_EMPIEZA> : [
 <IDENT> : i
@@ -805,6 +805,7 @@
 <CORCHETE_EMPIEZA> : [
 <IDENT> : j
 <CORCHETE_TERMINA> : ]
+<PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <FIN> : Fin
 <DE> : de
@@ -881,7 +882,7 @@
 <PUNTO_COMA> : ;
 <LEE> : Lee
 <PAREN_EMPIEZA> : (
-<IMPRIME> : imprime
+<IDENT> : alfa
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <IMPRIME> : Imprime
