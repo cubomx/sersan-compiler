@@ -1,4 +1,5 @@
 from symbol import Nodo
+from collections import deque
 
 class symbolTable:
     def __init__(self, file):
@@ -18,6 +19,7 @@ class symbolTable:
     def search(self, key):
         if key in self.dict:
             return self.dict[key]
+        return None
 
     def exists(self, key):
         if key in self.dict:
@@ -25,6 +27,7 @@ class symbolTable:
 
     def const_add(self, pila):
         top = pila.pop()
+
         while top != '':
             new_nodo = Nodo()
             new_nodo.value = pila.pop()
@@ -35,10 +38,81 @@ class symbolTable:
             if self.exists(new_nodo.name):
                 self.add_err("Cannot redeclared const ", new_nodo.name, -2)
             else:
-
                 self.dict[new_nodo.name] = new_nodo
             if len(pila) == 0:
                 top = ''
+
+    def add_to_table(self, new_nodo):
+        if self.exists(new_nodo.name):
+            self.add_err("Cannot redeclared variable ", new_nodo.name, -2)
+        else:
+            self.dict[new_nodo.name] = new_nodo
+
+    def is_valid_value(self, nxt, newNodo, dimension):
+        if nxt.isdigit():
+            print("hei33333333333333333333333")
+            newNodo.dimens[dimension] = int(nxt)
+        else:
+            try:
+                floating = float(nxt)
+                self.add_err("Cannot use real number as index", nxt, -2)
+            except ValueError:
+                search = self.search(nxt)
+                if search is not None:
+                    if search.datatype == "E":
+                        if search.value is not None:
+                            newNodo.dimens[dimension] = search.value
+                        else:
+                            self.add_err("Declaring size of array of not initialized value", search.name, -2)
+                    else:
+                        self.add_err("Declaring size of array with non integer index", search.name, -2)
+                else:
+                    self.add_err("Declaring size of array of undefined value", nxt, -2)
+
+
+
+
+
+    def var_add(self, pila):
+        datatype = pila.pop()
+        type_ = 'V'
+        top = pila.pop()
+        pila_matrices = deque()
+        while True:
+            print(pila)
+            newNodo = Nodo()
+            new_ = pila.pop()
+            if new_ == '###':
+                break
+            elif new_ == 'DIM':
+                newNodo.name = pila.pop()
+                newNodo.type = type_
+                newNodo.datatype = datatype
+                pila_matrices.append(newNodo)
+            elif new_ == '[]':
+                newNodo = pila_matrices.pop()
+                nxt = pila.pop()
+                if nxt == "[]":
+                    nxt = pila.pop()
+                    self.is_valid_value(nxt, newNodo, 1)
+                    nxt = pila.pop()
+
+                self.is_valid_value(nxt, newNodo, 0)
+
+                self.add_to_table(newNodo)
+
+            else:
+                newNodo.name = new_
+                newNodo.type = type_
+                newNodo.datatype = datatype
+                newNodo.value = "I"
+                self.add_to_table(newNodo)
+
+            if len(pila) == 0:
+                break
+
+
+
 
     def add_err(self, lex_error, val, line):
         if line == -1:

@@ -1,3 +1,17 @@
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
 err: Syntax error[valor] in line 80
 err: Expecting logical expression in function call[3] in line 80
 err: Syntax error[Inicio] in line 87
@@ -8,6 +22,38 @@ err: Expecting semi-colon at the end of line
 err: Expecting semi-colon at the end of line
 err: Syntax error[;] in line 104
 err: Expecting semi-colon at the end of line
+err: Declaring size of array of undefined value
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
+err: Cannot redeclared variable 
 err: Syntax error[(] in line 110
 err: Not increment/decrement value in line [] in line 110
 err: Syntax error[Si] in line 112

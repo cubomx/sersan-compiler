@@ -46,6 +46,7 @@ class Syntax(object):
                    | gpoids PUNTOS_DOBLES TIPO PUNTO_COMA
         '''
         self.pila.append(p[3])
+        self.symTable_.var_add(self.pila)
 
 
     def p_gpovarsEmpty(self, p):
@@ -64,23 +65,42 @@ class Syntax(object):
         print("Missing <type> in variable definition")
         self.add_err("Missing <type> in variable definition", '', p.lineno(4))
 
-    def p_gpoids(self, p):
-        '''gpoids : IDENT dimens COMA gpoids2
-                  | IDENT opasig COMA gpoids2
-                  | IDENT dimens
-                  | IDENT COMA gpoids2
-                  '''
-        print(p[1])
+
+    def p_gopids_(self, p):
+        '''gpoids : IDENT COMA gpoids2
+                    | IDENT opasig COMA gpoids2'''
         self.pila.append(p[1])
         self.pila.append("###")
 
-    def p_gpoids2(self, p):
-        '''gpoids2 : IDENT dimens COMA gpoids2
-                  | IDENT opasig COMA gpoids2
+    def p_gpoids_2(self, p):
+        '''gpoids : IDENT dimens COMA gpoids2
                   | IDENT dimens
-                  | IDENT COMA gpoids2 '''
+                  '''
         print(p[1])
         self.pila.append(p[1])
+        self.pila.append("DIM")
+        self.pila.append("###")
+
+
+
+    def p_gpoids2_2(self, p):
+        '''gpoids2 : IDENT COMA gpoids2
+                   | IDENT opasig COMA gpoids2
+                   | IDENT
+        '''
+        self.pila.append(p[1])
+
+    def p_gpoids2(self, p):
+        '''gpoids2 : IDENT dimens COMA gpoids2
+                  | IDENT dimens
+
+                  '''
+        print(p[1])
+        print(p[2])
+        self.pila.append(p[1])
+        self.pila.append("DIM")
+
+
 
     def p_gpoidsError(self, p):
         '''gpoids : IDENT dimens error gpoids
@@ -102,6 +122,7 @@ class Syntax(object):
         '''dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens'''
         print("dimension")
         self.pila.append("[]")
+
 
     def p_dimensEmpty(self, p):
         'dimens :'

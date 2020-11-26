@@ -1,0 +1,22 @@
+constantes PI:=3.141592;
+           MAX:=30;
+
+variables i, j, k, n[2], vector[MAX], matriz[MAX][MAX]:Entero;
+          r, s, t:real;
+          Alfa, Beta:Alfabetico;
+          Log1, Log2:Logico;
+
+Programa
+   limpia;
+   Selecciona();
+   Imprime("Dame Radio = ");Lee(r);
+   Imprime("Dame Altura= ");Lee(s);
+   Imprimenl("El Volum del Cilindro= ", VolCil(r, s);
+   Imprimenl("Es el radio= ", r, " mayor que Altura= ", s, " ? ", Compara(r, s, 2));
+   LeeVecmat();
+   Imprime("Dame tu nombre: ");
+   Lee(alfa);
+   Imprime("Dame tu Apellido: ");
+   Lee(beta);
+   Imprimenl("Hola ", Concat(alfa, beta), " ya la pasaste!!!");
+Fin de programa.
