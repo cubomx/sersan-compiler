@@ -26,6 +26,6 @@ else:
     print(syntax.pila)
 
 
-
+syntax.symTable_.eje.close()
 lex_.close_file()
 

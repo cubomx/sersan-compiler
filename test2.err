@@ -15,13 +15,4 @@ err: Cannot redeclared variable
 err: Cannot redeclared variable 
 err: Cannot redeclared variable 
 err: Cannot redeclared variable 
-err: Syntax error[valor] in line 80
-err: Expecting logical expression in function call[3] in line 80
-err: Syntax error[Inicio] in line 87
-err: Not increment/decrement value in line [] in line 86
-err: Syntax error[hata] in line 100
-err: Expecting semi-colon at the end of line
-err: Expecting semi-colon at the end of line
-err: Expecting semi-colon at the end of line
-err: Syntax error[;] in line 104
-err: Expecting semi-colon at the end of line
+err: Cannot redeclared variable 

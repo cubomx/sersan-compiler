@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from lex_analyzer import Lexer
 from collections import deque
-from semantic import symbolTable
+from semantic import SymbolTable
 
 class Syntax(object):
     tokens = Lexer.tokens
@@ -30,7 +30,7 @@ class Syntax(object):
         self.file_name = filename
         open(self.file_name + ".err", 'w').close()
         self.err_file = open(self.file_name + ".err", "a")
-        self.symTable_ = symbolTable(self.err_file)
+        self.symTable_ = SymbolTable(self.err_file, filename)
 
     def p_programa(self, p):
         'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA PUNTO'
@@ -68,7 +68,10 @@ class Syntax(object):
 
     def p_gopids_(self, p):
         '''gpoids : IDENT COMA gpoids2
-                    | IDENT opasig COMA gpoids2'''
+                    | IDENT opasig COMA gpoids2
+                    | IDENT gpoids2
+                    | IDENT
+                    '''
         self.pila.append(p[1])
         self.pila.append("###")
 
@@ -284,7 +287,7 @@ class Syntax(object):
                     | INTERRUMPE
                     | CONTINUA
         '''
-        #print("estatuto")
+        if p[1] == "imprime": print("yooooooooooooo0000")
 
     def p_estatutoEmpty(self, p):
         'estatuto : empty'
@@ -446,9 +449,12 @@ class Syntax(object):
 
     def p_imprime(self, p):
         'imprime : IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA'
+        self.pila.append("IMPRIME")
+        #self.symTable_.imprime(self.pila)
 
     def p_imprimenl(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA '
+        self.pila.append("IMPRIMENL")
 
     def p_imprimenl_error(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp error'
@@ -459,14 +465,21 @@ class Syntax(object):
         '''lee : LEE PAREN_EMPIEZA IDENT PAREN_TERMINA
                | LEE PAREN_EMPIEZA IDENT dimens PAREN_TERMINA
         '''
-
-
-
+        self.pila.append(p[3])
+        self.pila.append("LEE")
+        self.symTable_.lee(self.pila)
 
     def p_gpoexp(self, p):
         '''gpoexp : exprlog
-                  | exprlog COMA gpoexp
+                  | exprlog COMA gpoexp2
         '''
+
+    def p_gpoexp2(self, p):
+        '''gpoexp2 : exprlog
+                  | exprlog COMA gpoexp2
+                  |'''
+
+
 
 
     def p_uparams(self, p):

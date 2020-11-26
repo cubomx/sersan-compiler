@@ -1,10 +1,15 @@
 from symbol import Nodo
 from collections import deque
 
-class symbolTable:
-    def __init__(self, file):
+
+class SymbolTable:
+    def __init__(self, file, filename):
         self.dict = dict()
         self.err_file = file
+        self.file_name = filename
+        open(self.file_name + ".eje", 'w').close()
+        self.eje = open(self.file_name + ".eje", "a")
+        self.cont = 1
 
     def __str__(self):
         string = ""
@@ -70,9 +75,6 @@ class symbolTable:
                     self.add_err("Declaring size of array of undefined value", nxt, -2)
 
 
-
-
-
     def var_add(self, pila):
         datatype = pila.pop()
         type_ = 'V'
@@ -114,6 +116,23 @@ class symbolTable:
 
 
 
+
+
+
+
+    def imprime(self, pila):
+        return
+
+    # OPCODE --> 19 its to read input from console
+    def lee(self, pila):
+        OPCODE = 19
+        top = pila.pop()
+        ident = pila.pop()
+        self.add_code('OPR', ident, OPCODE)
+
+    def gruposea(self, pila):
+        return
+
     def add_err(self, lex_error, val, line):
         if line == -1:
             self.err_file.write("err: " + lex_error + + "[" + val + "]" + "\n")
@@ -121,5 +140,9 @@ class symbolTable:
             self.err_file.write("err: " + lex_error + "\n")
         else:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
+
+    def add_code(self, instruction, firstparam, secondparam):
+        self.eje.write(str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n")
+        self.cont+=1
 
 
