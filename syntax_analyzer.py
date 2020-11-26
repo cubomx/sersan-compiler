@@ -1,12 +1,15 @@
 import ply.yacc as yacc
 from lex_analyzer import Lexer
+from collections import deque
+from semantic import symbolTable
 
 class Syntax(object):
     tokens = Lexer.tokens
+    pila = deque()
     estatutos = Lexer.estatutos
     line_analyzing = list()
     precedence = (
-        ('right', 'IDENT', 'INICIO', 'SI', 'MIENTRAS'),
+        ('left', 'IDENT', 'INICIO', 'SI', 'MIENTRAS'),
         ('right', 'PROCEDIMIENTO', 'FUNCION'),
         ('right', 'CONSTANTES', 'VARIABLES'),
         ('right', 'OP_ASIG'),
@@ -15,7 +18,7 @@ class Syntax(object):
         ('left', 'MAS', 'MENOS'),
         ('left', 'MULTI', 'DIV'),
         ('right', 'PROTOTIPOS'),
-        ('left', 'CORCHETE_EMPIEZA', 'CORCHETE_TERMINA'),
+        ('right', 'CORCHETE_EMPIEZA', 'CORCHETE_TERMINA'),
         ('left', 'PAREN_TERMINA'),
         ('left', 'PAREN_EMPIEZA'),
         ('right', 'PUNTO_COMA'),
@@ -27,6 +30,7 @@ class Syntax(object):
         self.file_name = filename
         open(self.file_name + ".err", 'w').close()
         self.err_file = open(self.file_name + ".err", "a")
+        self.symTable_ = symbolTable(self.err_file)
 
     def p_programa(self, p):
         'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA PUNTO'
@@ -41,6 +45,8 @@ class Syntax(object):
         '''gpovars : gpoids PUNTOS_DOBLES TIPO PUNTO_COMA gpovars
                    | gpoids PUNTOS_DOBLES TIPO PUNTO_COMA
         '''
+        self.pila.append(p[3])
+
 
     def p_gpovarsEmpty(self, p):
         'gpovars : empty'
@@ -49,7 +55,6 @@ class Syntax(object):
         '''gpovars : gpoids error TIPO PUNTO_COMA gpovars
                    | gpoids error TIPO PUNTO_COMA
         '''
-        print("Missing ':' after variable declaration")
         self.add_err("Missing ':' after variable declaration", '', p.lineno(2))
 
     def p_gpovars_error2(self, p):
@@ -60,16 +65,29 @@ class Syntax(object):
         self.add_err("Missing <type> in variable definition", '', p.lineno(4))
 
     def p_gpoids(self, p):
-        '''gpoids : IDENT dimens COMA gpoids
-                  | IDENT opasig COMA gpoids
+        '''gpoids : IDENT dimens COMA gpoids2
+                  | IDENT opasig COMA gpoids2
                   | IDENT dimens
-                  | IDENT COMA gpoids
+                  | IDENT COMA gpoids2
                   '''
-    def p_gopids(self, p):
+        print(p[1])
+        self.pila.append(p[1])
+        self.pila.append("###")
+
+    def p_gpoids2(self, p):
+        '''gpoids2 : IDENT dimens COMA gpoids2
+                  | IDENT opasig COMA gpoids2
+                  | IDENT dimens
+                  | IDENT COMA gpoids2 '''
+        print(p[1])
+        self.pila.append(p[1])
+
+    def p_gpoidsError(self, p):
         '''gpoids : IDENT dimens error gpoids
                   | IDENT error gpoids
                   | IDENT opasig error gpoids
         '''
+
         print("Missing ',' between individual variable declaration")
         self.add_err("Missing ',' between individual variable declaration", '', p.lineno(2))
 
@@ -77,10 +95,16 @@ class Syntax(object):
     def p_gpoidsEmpty(self, p):
         'gpoids : empty'
 
+    def p_gpoids2Empty(self, p):
+        'gpoids2 : empty'
+
     def p_dimens(self, p):
-        '''dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens
-                  |'''
+        '''dimens : CORCHETE_EMPIEZA valor CORCHETE_TERMINA dimens'''
         print("dimension")
+        self.pila.append("[]")
+
+    def p_dimensEmpty(self, p):
+        'dimens :'
 
     def p_dimens_error1(self, p):
         '''dimens : CORCHETE_EMPIEZA valor error dimens'''
@@ -113,12 +137,23 @@ class Syntax(object):
         'constantes : empty'
 
 
-    def p_grupoconst(self, p):
-        '''grupoconst : IDENT OP_ASIG CTE_REAL PUNTO_COMA
-                      | IDENT OP_ASIG CTE_ENTERA PUNTO_COMA
-                      | IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst
+    def p_grupoconstReal(self, p):
+        '''grupoconst : IDENT OP_ASIG CTE_ENTERA PUNTO_COMA
                       | IDENT OP_ASIG CTE_ENTERA PUNTO_COMA grupoconst
         '''
+        self.pila.append(p[1])
+        self.pila.append("E")
+        self.pila.append(p[3])
+
+    def p_grupoconstEntera(self, p):
+        '''grupoconst : IDENT OP_ASIG CTE_REAL PUNTO_COMA
+                      | IDENT OP_ASIG CTE_REAL PUNTO_COMA grupoconst
+        '''
+        self.pila.append(p[1])
+        self.pila.append("R")
+        self.pila.append(p[3])
+        self.pila.append("%%%")
+        self.symTable_.const_add(self.pila)
 
     def p_grupoconstEmpty(self, p):
         'grupoconst : empty'
@@ -362,14 +397,18 @@ class Syntax(object):
 
     def p_termino(self, p):
         '''termino : IDENT
-                   | IDENT udim
-                   | lfunc
                    | CTE_ENTERA
                    | CTE_REAL
                    | CTE_ALFA
                    | VERDADERO
                    | FALSO
         '''
+        self.pila.append(p[1])
+
+    def p_terminoNoValor(self, p):
+        '''termino :
+                   | IDENT udim
+                   | lfunc'''
         print("termino")
 
     def p_lfunc(self, p):

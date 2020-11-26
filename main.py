@@ -21,6 +21,10 @@ else:
 
     result = syntax.parser.parse(file_.read())
 
+    print(syntax.symTable_)
+
+    print(syntax.pila)
+
 
 
 lex_.close_file()

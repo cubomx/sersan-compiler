@@ -15,6 +15,9 @@
 <IDENT> : k
 <COMA> : ,
 <IDENT> : n
+<CORCHETE_EMPIEZA> : [
+<CTE-ENTERA> : 2
+<CORCHETE_TERMINA> : ]
 <COMA> : ,
 <IDENT> : vector
 <CORCHETE_EMPIEZA> : [
