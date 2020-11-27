@@ -48,9 +48,7 @@ Programa
    limpia;
    k:=3;
    Selecciona();
-   Imprime("Dame tu nombre: ");
-   Lee(alfa);
-   Imprime("Dame tu Apellido: ");
+   Lee(Alfa);
    beta:="Villalvazo";
    Imprimenl(beta);
    Imprimenl(k);

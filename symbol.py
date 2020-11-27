@@ -5,8 +5,9 @@ class Nodo:
         self.datatype = None
         self.dimens = [0, 0]
         self.value = None
-        self.dependency = None
+        self.dependency = dict()
         self.undefined = True
+        self.scope = None
 
 
     def get_char(self):

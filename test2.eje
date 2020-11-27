@@ -1,3 +1,4 @@
-1 OPR n, 19
-2 OPR opc, 19
-3 OPR alfa, 19
+1 LIT "Dame un numero: ", 0
+2 OPR n, 19
+3 LIT "Factorial R]ecursivo I]nteractivo S]alir: ", 0
+4 OPR opc, 19

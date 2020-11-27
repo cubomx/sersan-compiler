@@ -199,12 +199,20 @@ class Syntax(object):
     def p_protfunc(self, p):
         'protfunc : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
 
+        self.pila.append(p[7])
+        self.pila.append(p[2])
+        self.pila.append('FUNCION')
+        self.symTable_.funcion_prototype(self.pila)
+
     def p_protfunc_error1(self, p):
         'protfunc : FUNCION error PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO PUNTO_COMA'
         self.add_err("Missing identifier on function prototype", '', p.lineno(1))
 
     def p_protproc(self, p):
         'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'
+        self.pila.append(p[2])
+        self.pila.append('FUNCION')
+        self.symTable_.procedure_prototype(pila)
 
     def p_protproc_error1(self, p):
         'protproc : PROCEDIMIENTO error PAREN_EMPIEZA params PAREN_TERMINA  PUNTO_COMA'
@@ -216,8 +224,11 @@ class Syntax(object):
     def p_params(self, p):
         'params : gpopars PUNTOS_DOBLES TIPO otrospars'
 
+        self.pila.append(p[3])
+
     def p_paramsEmpty(self, p):
         'params : empty'
+
 
     def p_params_error1(self, p):
         'params : gpopars PUNTOS_DOBLES error otrospars'
@@ -233,10 +244,19 @@ class Syntax(object):
     def p_params2Empty(self, p):
         'otrospars : empty'
 
+
     def p_gpopars(self, p):
-        '''gpopars : IDENT COMA gpopars
+        '''gpopars : IDENT COMA gpopars2
                    | IDENT
         '''
+        self.pila.append("???")
+        self.pila.append(p[1])
+
+    def p_gpopars2(self, p):
+        '''gpopars2 : IDENT COMA gpopars2
+                           | IDENT
+                '''
+        self.pila.append(p[1])
 
     def p_funcproc(self, p):
         '''funcproc : procedimiento funcproc
@@ -248,11 +268,16 @@ class Syntax(object):
 
     def p_procedimiento(self, p):
         'procedimiento : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA variables INICIO block FIN DE PROCEDIMIENTO PUNTO_COMA'
+        self.pila.append(p[2])
+        self.pila.append('PROCEDIMIENTO')
 
 
 
     def p_funcion(self, p):
         'funcion : FUNCION IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTOS_DOBLES TIPO variables INICIO block FIN DE FUNCION PUNTO_COMA'
+        self.pila.append(p[7])
+        self.pila.append(p[2])
+        self.pila.append('FUNCION')
 
     def p_block(self, p):
         '''block : estatuto puntoc block
@@ -340,6 +365,9 @@ class Syntax(object):
     def p_cuando(self, p):
         'cuando : CUANDO EL VALOR DE IDENT INICIO gposea otro FIN'
         print("cuando")
+        self.pila.append(p[5])
+        self.pila.append("CUANDO")
+        #self.symTable_.gruposea(self.pila)
 
     def p_otro(self, p):
         'otro : OTRO PUNTOS_DOBLES bckesp'
@@ -350,17 +378,27 @@ class Syntax(object):
     def p_gposea(self, p):
         'gposea : SEA gpoconst PUNTOS_DOBLES bckesp gposea'
 
+
     def p_gposeaEmpty(self, p):
         'gposea : empty'
 
     def p_gpoconst(self, p):
         'gpoconst : CTE_ALFA masgpoconst'
 
+        self.pila.append(p[1])
+        self.pila.append("SEA")
+
+    def p_gpoconst2(self, p):
+        'gpoconst2 : CTE_ALFA masgpoconst'
+        self.pila.append(p[1])
+
     def p_masgpoconst(self, p):
-        'masgpoconst : COMA gpoconst'
+        'masgpoconst : COMA gpoconst2'
 
     def p_masgpoconstEmpty(self, p):
         'masgpoconst : empty'
+        self.pila.append('$$$')
+
 
     def p_regresa(self, p):
         'regresa : REGRESA PAREN_EMPIEZA exprlog PAREN_TERMINA'
@@ -438,6 +476,7 @@ class Syntax(object):
     def p_lfunc(self, p):
         'lfunc : IDENT parenemp uparams PAREN_TERMINA'
         print("lfunc")
+        self.pila.append(p[1])
 
     def p_lfunc_error(self, p):
         'lfunc : IDENT parenemp error PAREN_TERMINA'
@@ -450,7 +489,7 @@ class Syntax(object):
     def p_imprime(self, p):
         'imprime : IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA'
         self.pila.append("IMPRIME")
-        #self.symTable_.imprime(self.pila)
+        self.symTable_.imprime(self.pila)
 
     def p_imprimenl(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA '
