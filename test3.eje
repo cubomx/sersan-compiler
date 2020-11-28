@@ -4,3 +4,44 @@
 4 LIT "Factorial R]ecursivo I]nteractivo S]alir: ", 0
 5 OPR 0, 20
 6 OPR opc, 19
+7 LOD opc, 0
+8 LIT "r", 0
+9 OPR 0, 14
+10 LOD opc, 0
+11 LIT "R", 0
+12 OPR 0, 14
+13 LIT "Factorial Recursivo de ", 0
+14 OPR 0, 20
+15 LOD n, 0
+16 OPR 0, 20
+17 LIT " es= ", 0
+18 OPR 0, 20
+19 LOD n, 0
+20 CAL FacRec, 0
+21 LOD FacRec, 0
+22 OPR 0, 21
+23 LOD opc, 0
+24 LIT "i", 0
+25 OPR 0, 14
+26 LOD opc, 0
+27 LIT "I", 0
+28 OPR 0, 14
+29 LIT "Factorial Iterativo de ", 0
+30 OPR 0, 20
+31 LOD n, 0
+32 OPR 0, 20
+33 LIT " es= ", 0
+34 OPR 0, 20
+35 LOD n, 0
+36 CAL FacIter, 0
+37 LOD FacIter, 0
+38 OPR 0, 21
+39 LOD opc, 0
+40 LIT "S", 0
+41 OPR 0, 13
+42 LOD opc, 0
+43 LIT "s", 0
+44 OPR 0, 13
+45 OPR 0, 15
+46 LIT "Opcion Invalida!!!", 0
+47 OPR 0, 21

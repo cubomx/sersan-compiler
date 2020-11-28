@@ -116,7 +116,7 @@
 <IDENT> : n
 <COMA> : ,
 <COMA> : ,
-<IDENT> : Faciter
+<IDENT> : FacIter
 <PAREN_EMPIEZA> : (
 <IDENT> : n
 <PAREN_TERMINA> : )

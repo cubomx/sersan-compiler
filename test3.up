@@ -20,7 +20,7 @@ Inicio
       Cuando el valor de opc
       Inicio
          Sea "R", "r": imprimenl("Factorial Recursivo de ", n, " es= ", FacRec(n))
-         Sea "I", "i": imprimenl("Factorial Iterativo de ", n, " es= ", Faciter(n))
+         Sea "I", "i": imprimenl("Factorial Iterativo de ", n, " es= ", FacIter(n))
          Otro: Si (opc <> "S" y opc <> "s") hacer
                   Imprimenl("Opcion Invalida!!!")
       Fin;

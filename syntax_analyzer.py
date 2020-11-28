@@ -34,6 +34,7 @@ class Syntax(object):
 
     def p_programa(self, p):
         'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA PUNTO'
+        self.print_every(p)
 
     def p_variables(self, p):
         'variables : VARIABLES gpovars'
@@ -212,7 +213,7 @@ class Syntax(object):
         'protproc : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA PUNTO_COMA'
         self.pila.append(p[2])
         self.pila.append('FUNCION')
-        self.symTable_.procedure_prototype(pila)
+        self.symTable_.procedure_prototype(self.pila)
 
     def p_protproc_error1(self, p):
         'protproc : PROCEDIMIENTO error PAREN_EMPIEZA params PAREN_TERMINA  PUNTO_COMA'
@@ -319,6 +320,7 @@ class Syntax(object):
 
     def p_si(self, p):
         'si : SI PAREN_EMPIEZA exprlog PAREN_TERMINA HACER bckesp sino'
+        self.pila.append("SI")
 
 
     def p_sino(self, p):
@@ -367,13 +369,18 @@ class Syntax(object):
         print("cuando")
         self.pila.append(p[5])
         self.pila.append("CUANDO")
-        #self.symTable_.gruposea(self.pila)
+        self.symTable_.cuando(self.pila)
 
     def p_otro(self, p):
         'otro : OTRO PUNTOS_DOBLES bckesp'
+        # introduce OTRO in the queue
+        self.pila.append('OTRO')
+        #self.check_for_previous_instruction('OTRO')
+
 
     def p_otroEmpty(self, p):
         'otro : empty'
+
 
     def p_gposea(self, p):
         'gposea : SEA gpoconst PUNTOS_DOBLES bckesp gposea'
@@ -387,6 +394,7 @@ class Syntax(object):
 
         self.pila.append(p[1])
         self.pila.append("SEA")
+        #self.symTable_.sea_instruction(self.pila)
 
     def p_gpoconst2(self, p):
         'gpoconst2 : CTE_ALFA masgpoconst'
@@ -412,23 +420,31 @@ class Syntax(object):
         '''exprlog : opy
                    | opy O exprlog
         '''
-        print("he")
+        if len(p) > 2:
+            self.pila.append(p[2].upper())
 
     def p_opy(self, p):
         '''opy : opno
                | opno Y opy
 
         '''
+        if len(p) > 2:
+            self.pila.append(p[2].upper())
 
     def p_opno(self, p):
         '''opno : oprel
                 | NO oprel
         '''
+        if len(p) > 2:
+            self.pila.append(p[1].upper())
 
     def p_oprel(self, p):
         '''oprel : expr
                  | expr OP_REL oprel
          '''
+        if len(p) > 2:
+            self.pila.append(p[2])
+
 
 
     def p_expr(self, p):
@@ -436,6 +452,8 @@ class Syntax(object):
                 | multi MAS expr
                 | multi MENOS expr
         '''
+        if len(p) > 2:
+            self.pila.append(p[2])
 
 
     def p_multi(self, p):
@@ -445,17 +463,22 @@ class Syntax(object):
                  | expo MOD multi
                  | empty
         '''
+        if len(p) > 2:
+            self.pila.append(p[2])
 
     def p_expo(self, p):
         '''expo : signo
                 | signo POTENCIA expo
         '''
+        if len(p) > 2:
+            self.pila.append(p[2])
 
     def p_signo(self, p):
         '''signo : termino
                  | MENOS termino
         '''
-        print("signo")
+        if len(p) > 2:
+            self.pila.append(p[2])
 
     def p_termino(self, p):
         '''termino : IDENT
@@ -485,6 +508,7 @@ class Syntax(object):
 
     def p_parenEmpieza(self, p):
         'parenemp : PAREN_EMPIEZA'
+        self.pila.append('PARAM')
 
     def p_imprime(self, p):
         'imprime : IMPRIME PAREN_EMPIEZA gpoexp PAREN_TERMINA'
@@ -494,6 +518,7 @@ class Syntax(object):
     def p_imprimenl(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp PAREN_TERMINA '
         self.pila.append("IMPRIMENL")
+        self.symTable_.imprimenl(self.pila)
 
     def p_imprimenl_error(self, p):
         'imprimenl : IMPRIMENL PAREN_EMPIEZA gpoexp error'
@@ -509,9 +534,11 @@ class Syntax(object):
         self.symTable_.lee(self.pila)
 
     def p_gpoexp(self, p):
-        '''gpoexp : exprlog
+        '''gpoexp : exprlog gpoexp2
                   | exprlog COMA gpoexp2
         '''
+
+
 
     def p_gpoexp2(self, p):
         '''gpoexp2 : exprlog
@@ -554,5 +581,28 @@ class Syntax(object):
             self.err_file.write("err: " + lex_error + "\n")
         else:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
+
+
+    def check_for_previous_instruction(self, actualInstruction):
+        descartados = deque()
+
+        top = self.pila.pop()
+        descartados.append(top)
+        top = self.pila.pop()
+
+        while top not in self.tokens:
+            print("hhoohooo")
+            descartados.append(top)
+            top = self.pila.pop()
+
+        self.pila.append(actualInstruction)
+
+        while len(descartados) > 0:
+            self.pila.append(descartados.pop())
+
+    def print_every(self, p):
+        for i in p:
+            print(i)
+
 
 
