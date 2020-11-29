@@ -1,0 +1,29 @@
+constantes PI:=3.141592;
+	MAX:=30;
+
+variables k:Entero;
+          Alfa, Beta:Alfabetico;
+
+Prototipos
+
+Fin de Prototipos;
+
+Procedimiento Selecciona()
+variables opc:alfabetico;
+Inicio
+  Imprime("Te gustan las matematicas? (S,s), (N, n) ");
+  Lee(opc);
+  Cuando el valor de opc
+  Inicio
+     Sea "S", "s": imprimenl("Bien, eres un suertudo")
+     Sea "N", "n": imprimenl("A mi tampoco")
+     Otro: Imprimenl("Bien! No caes en esta falsa dicotomia")
+  Fin;
+Fin de Procedimiento;
+
+Programa
+   Lee(Alfa);
+   Imprimenl(beta);
+   Imprimenl(k);
+
+Fin de programa.

@@ -27,5 +27,6 @@ else:
 
 
 syntax.symTable_.eje.close()
+#syntax.symTable_.print_Objects()
 lex_.close_file()
 

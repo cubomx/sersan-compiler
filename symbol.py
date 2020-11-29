@@ -24,7 +24,7 @@ class Instruction:
         self.param_1 = firstparam
         self.param_2 = secondparam
         self.pendingTag = False
-
+        self.istTag = False
         if isStartBlock:
             self.pendingTag = True
             self.istTag = True

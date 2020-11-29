@@ -34,7 +34,8 @@ class Syntax(object):
 
     def p_programa(self, p):
         'program : constantes variables protfuncproc funcproc PROGRAMA block FIN DE PROGRAMA PUNTO'
-        self.print_every(p)
+        self.pila.append('PROGRAMA')
+        self.symTable_.programa(self.pila)
 
     def p_variables(self, p):
         'variables : VARIABLES gpovars'
@@ -271,6 +272,7 @@ class Syntax(object):
         'procedimiento : PROCEDIMIENTO IDENT PAREN_EMPIEZA params PAREN_TERMINA variables INICIO block FIN DE PROCEDIMIENTO PUNTO_COMA'
         self.pila.append(p[2])
         self.pila.append('PROCEDIMIENTO')
+        self.symTable_.procedure(self.pila)
 
 
 

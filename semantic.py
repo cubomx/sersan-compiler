@@ -22,6 +22,27 @@ class SymbolTable:
         self.labelCont = 1
         self.endCycle = None
         self.endCycleCont = 1
+        self.code = deque()
+        self.startOfFunction = 1
+
+    def add_positionTag(self, n):
+        return
+
+
+    def programa(self, pila):
+        pila.pop()
+        print('_P' + ',I' + ',I' + ',' + str(self.startOfFunction))
+        lista = deque()
+        while len(pila) > 0:
+            nxt = pila.pop()
+            lista += self.statuto(pila, nxt)
+
+        if len(lista) > 0:
+            self.take_everything_to_eje(lista)
+
+
+        self.startOfFunction = self.cont + 1
+
 
     def check_Dependencies(self, subdict):
         string_build = ''
@@ -29,6 +50,15 @@ class SymbolTable:
             string_build += value.type + ',' + value.datatype + ',' + str(value.dimens[0]) + ',' + str(value.dimens[1]) + ',' + key + ','
         return string_build
 
+
+    def print_Objects(self):
+        top = self.code.pop()
+        while len(self.code) > 0:
+            if top.istTag:
+                print(top.type)
+            else:
+                print(top.op + ' ' + str(top.param_1) + ' ' + str(top.param_2))
+            top = self.code.pop()
 
     def __str__(self):
         string = ""
@@ -64,7 +94,7 @@ class SymbolTable:
             new_nodo.name = pila.pop()
 
             if self.exists(new_nodo.name):
-                self.add_err("Cannot redeclared const ", new_nodo.name, -2)
+                self.add_err("Cannot redeclared const ", new_nodo.name, -1)
             else:
                 self.dict[new_nodo.name] = new_nodo
             if len(pila) == 0:
@@ -72,7 +102,7 @@ class SymbolTable:
 
     def add_to_table(self, new_nodo):
         if self.exists(new_nodo.name):
-            self.add_err("Cannot redeclared variable ", new_nodo.name, -2)
+            self.add_err("Cannot redeclared variable ", new_nodo.name, -1)
         else:
             self.dict[new_nodo.name] = new_nodo
 
@@ -104,6 +134,8 @@ class SymbolTable:
         else:
             pila.append(type_)
 
+
+
     def funcion_prototype(self, pila):
         pila.pop()
         functionNode = Nodo()
@@ -119,15 +151,43 @@ class SymbolTable:
 
     def procedure_prototype(self, pila):
         pila.pop()
-        procNode = Nodo()
-        procNode.name = pila.pop()
-        procNode.type = 'P'
-        procNode.datatype = 'I'
-        self.add_to_table(procNode)
+        procNode = self.add_procedure_to_table(pila.pop())
 
         type_ = pila.pop()
         upp_type = type_.upper()
         self.checkForParams(pila, upp_type, procNode)
+
+    def add_procedure_to_table(self, ident):
+        procNode = Nodo()
+        procNode.name = ident
+        procNode.type = 'P'
+        procNode.datatype = 'I'
+        self.add_to_table(procNode)
+        return procNode
+
+
+    def procedure(self, pila):
+
+        pila.pop()
+        ident = pila.pop()
+        if self.exists(ident):
+            node = self.search(ident)
+            if node.type != 'P':
+                self.add_err('Declaration of procedure using a identifier of somehthing else', ident, -1)
+            else:
+                node.dimens[0] = self.startOfFunction
+                self.add_code('OPR', 0, 1)
+                self.startOfFunction = self.cont
+        else:
+            procNode = self.add_procedure_to_table(ident)
+            if len(pila)> 0:
+                type_ = pila.pop()
+                upp_type = type_.upper()
+                self.checkForParams(pila, upp_type, procNode)
+            procNode.dimens[0] = self.startOfFunction
+            self.add_code('OPR', 0, 1)
+            self.startOfFunction = self.cont
+
 
 
 
@@ -138,7 +198,7 @@ class SymbolTable:
         else:
             try:
                 floating = float(nxt)
-                self.add_err("Cannot use real number as index", nxt, -2)
+                self.add_err("Cannot use real number as index", nxt, -1)
             except ValueError:
                 search = self.search(nxt)
                 if search is not None:
@@ -146,22 +206,28 @@ class SymbolTable:
                         if search.value is not None:
                             newNodo.dimens[dimension] = search.value
                         else:
-                            self.add_err("Declaring size of array of not initialized value", search.name, -2)
+                            self.add_err("Declaring size of array of not initialized value", search.name, -1)
                     else:
-                        self.add_err("Declaring size of array with non integer index", search.name, -2)
+                        self.add_err("Declaring size of array with non integer index", search.name, -1)
                 else:
-                    self.add_err("Declaring size of array of undefined value", nxt, -2)
+                    self.add_err("Declaring size of array of undefined value", nxt, -1)
 
 
     def var_add(self, pila):
+        print(pila)
         datatype = pila.pop()
         type_ = 'V'
-        top = pila.pop()
-        pila_matrices = deque()
-        while True:
-            print(pila)
-            newNodo = Nodo()
+        new_ = pila.pop()
+        if new_ == '###':
             new_ = pila.pop()
+
+        pila_matrices = deque()
+        cont = 0
+        while True:
+            if cont > 0:
+                new_ = pila.pop()
+            newNodo = Nodo()
+            cont += 1
             if new_ == '###':
                 break
             elif new_ == 'DIM':
@@ -182,6 +248,7 @@ class SymbolTable:
                 self.add_to_table(newNodo)
 
             else:
+                print(new_)
                 newNodo.name = new_
                 newNodo.type = type_
                 newNodo.datatype = datatype
@@ -190,6 +257,7 @@ class SymbolTable:
 
             if len(pila) == 0:
                 break
+
 
 
     # OPCODE --> 20, the operation CODE to show input to the user
@@ -211,10 +279,10 @@ class SymbolTable:
 
     def literalOrValue(self, value):
         if '"' in value:
-            return self.add_code_for_latter('LIT', value, 0)
+            return self.add_code_for_latter('LIT', value, 0, False, None)
 
         if self.exists(value):
-            return self.add_code_for_latter('LOD', value, 0)
+            return self.add_code_for_latter('LOD', value, 0, False, None)
 
         else:
             self.add_err('Accesing non existing variable', '', -1)
@@ -227,46 +295,51 @@ class SymbolTable:
         lista = deque()
         pila.pop()
         first = 0
-        lista.append(self.add_code_for_latter('OPR', 0, 21))
-        while True:
+        lista.append(self.add_code_for_latter('OPR', 0, 21, False, None))
+        while len(pila) > 0:
             nxt = pila.pop()
             if '"' in nxt:
                 if first > 0:
-                    lista.append(self.add_code_for_latter('OPR', 0, 20))
+                    lista.append(self.add_code_for_latter('OPR', 0, 20, False, None))
                 first += 1
-                lista.append(self.add_code_for_latter('LIT', nxt, 0)) # TAKE TO THE QUEUE OF COMPILER
+                lista.append(self.add_code_for_latter('LIT', nxt, 0, False, None)) # TAKE TO THE QUEUE OF COMPILER
 
             elif self.exists(nxt):
                 search = self.search(nxt)
                 if search.type == "F":
                     if first > 0:
-                        lista.append(self.add_code_for_latter('OPR', 0, 20))
+                        lista.append(self.add_code_for_latter('OPR', 0, 20, False, None))
                     first += 1
-                    lista.append(self.add_code_for_latter('LOD', nxt, 0))
-                    lista.append(self.add_code_for_latter('CAL', nxt, 0))
+                    lista.append(self.add_code_for_latter('LOD', nxt, 0, False, None))
+                    lista.append(self.add_code_for_latter('CAL', nxt, 0, False, None))
                     nxt = pila.pop()
                     while nxt != 'PARAM':
                         if self.exists(nxt):
-                            lista.append(self.add_code_for_latter('LOD', nxt, 0))
+                            lista.append(self.add_code_for_latter('LOD', nxt, 0, False, None))
 
                         nxt = pila.pop()
                 else:
                     if first > 0:
-                        lista.append(self.add_code_for_latter('OPR', 0, 20))
+                        lista.append(self.add_code_for_latter('OPR', 0, 20, False, None))
                     first += 1
-                    lista.append(self.add_code_for_latter('LOD', nxt, 0 ))
+                    lista.append(self.add_code_for_latter('LOD', nxt, 0, False, None))
             else:
                 if nxt == 'SEA':
                     pila.append('IMPRNL')
+                    lista.append('///')
                     pila.append(nxt)
+                    self.inner_sentences += lista
+                    break
+                if nxt not in self.estatutos:
+                    self.add_err('Trying to print a non exiting value', nxt, -1)
                 else:
                     pila.append(nxt)
                     pila.append('IMPRNL')
+                    lista.append('///')
+                    self.inner_sentences += lista
+                    break
 
 
-                lista.append('///')
-                self.inner_sentences += lista
-                break
 
             if len(pila) == 0:
                 self.take_everything_to_eje(lista)
@@ -290,32 +363,37 @@ class SymbolTable:
 
     def opr_log(self, nxt):
         if nxt == 'O':
-            return self.add_code_for_latter('OPR', 0, 15)
+            return self.add_code_for_latter('OPR', 0, 15, False, None)
         elif nxt == 'Y':
-            return self.add_code_for_latter('OPR', 0, 16)
+            return self.add_code_for_latter('OPR', 0, 16, False, None)
         else:
-            return self.add_code_for_latter('OPR', 0, 17)
+            return self.add_code_for_latter('OPR', 0, 17, False, None)
 
     def opr_rel(self, nxt):
         if nxt == '<':
-            return self.add_code_for_latter('OPR', 0, 9)
+            # return self.add_code_for_latter('OPR', 0, 9)
+            return self.add_code_for_latter('OPR', 0, 9, False, None)
         elif nxt == '>':
-            return self.add_code_for_latter('OPR', 0, 10)
+            # return self.add_code_for_latter('OPR', 0, 10)
+            return self.add_code_for_latter('OPR', 0, 10, False, None)
         elif nxt == '<=':
-            return self.add_code_for_latter('OPR', 0, 11)
+            return self.add_code_for_latter('OPR', 0, 11, False, None)
         elif nxt == '>=':
-            return self.add_code_for_latter('OPR', 0, 12)
+            return self.add_code_for_latter('OPR', 0, 12, False, None)
         elif nxt == '<>':
-            return self.add_code_for_latter('OPR', 0, 13)
+            return self.add_code_for_latter('OPR', 0, 13, False, None)
         elif nxt == '=':
-            return self.add_code_for_latter('OPR', 0, 14)
+            return self.add_code_for_latter('OPR', 0, 14, False, None)
 
+    def limpia(self):
+        return self.add_code_for_latter('OPR', 0, 18, False, None)
 
     def if_statemen(self, pila):
         not_discard = None
         lista = deque()
         # First, we add the jump if the condition is false
-        lista.append(self.add_code_for_latter('JMC', 'F', 'E'+str(self.labelCont)))
+        #lista.append(self.add_code_for_latter('JMC', 'F', 'E'+str(self.labelCont)))
+        lista.append(self.add_code_for_latter('JMC', 'F', 'E' + str(self.labelCont), False, None))
         self.labelCont += 1
         while len(pila) > 0:
             nxt = pila.pop()
@@ -337,12 +415,14 @@ class SymbolTable:
             pila.append(not_discard)
         return lista
 
-    def statuto(self, pila):
-        top = pila.pop()
+    def statuto(self, pila, top):
         lista = deque()
         if top == 'SI':
             lista = self.if_statemen(pila)
-
+        if top == 'LIMPIA':
+            lista = self.limpia()
+        if top == 'IMPRNL':
+            lista = self.returnUntil(self.inner_sentences, '///')
         return lista
 
     def returnUntil(self, accum, char):
@@ -366,51 +446,65 @@ class SymbolTable:
 
         pila.pop()
         lod_usual = pila.pop()
-        lod_usual = self.add_code_for_latter('LOD', lod_usual, 0)
-
+        lod_usual = self.add_code_for_latter('LOD', lod_usual, 0, False, None)
         nxt = pila.pop()
         previousTag = None
+
+        final.append(self.add_code_for_latter('', '', '', True, 'FIN_CUANDO'))
         while len(pila) > 0:
             if nxt == 'OTRO':
-                other = None
-                add = self.statuto(pila)
-                print(pila)
-                nxt = pila.pop()
-                if nxt == 'IMPRNL':
-                    other = self.returnUntil(self.inner_sentences, '///')
-                    if len(add) > 0:
-                        other += add
-                nxt = pila.pop()
-                print(pila)
-                print(nxt)
+                nxtTo = pila.pop()
+                if nxtTo == 'SEA':
+                    print("hhhhh")
+
+                    nxt = pila.pop()
+                    print(nxt)
+                    pila.append('SEA')
+
+                other = deque()
+                other = self.statuto(pila, nxt)
+
+
+                if len(pila) > 0:
+                    nxt = pila.pop()
                 if nxt == 'SEA':
                     final += other
                     continue
             elif nxt == 'SEA':
+                print(pila)
                 # Recover all block instruncitons
                 nxt = pila.pop()
                 other = deque()
+                other.append(self.add_code_for_latter('JMP', 0, 'EF'+str(self.endCycleCont), False, 'DEP FIN_CUANDO'))
                 if nxt == 'IMPRNL':
                     other += self.returnUntil(self.inner_sentences, '///')
                 nxt = pila.pop()
-                print(nxt)
                 inicio = deque()
+                other.append(self.add_code_for_latter('', '', '', True, 'INICIO_SEA'))
                 while len(pila) > 0:
                     print(pila)
                     if '"' in nxt:
+
                         inicio.appendleft(lod_usual)
+                        inicio.appendleft(self.add_code_for_latter('LIT', nxt, 0, False, None))
+                        inicio.appendleft(self.add_code_for_latter('OPR', 0, 14, False, None))
+                        '''
                         inicio.appendleft(self.add_code_for_latter('LIT', nxt, 0))
-                        inicio.appendleft(self.add_code_for_latter('OPR', 0, 14))
+                        inicio.appendleft(self.add_code_for_latter('OPR', 0, 14))'''
 
                         nextOne = pila.pop()
-                        inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont)))
+
+                        #inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont)))
+                        inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont), False, 'DEP INICIO_SEA'))
                         if nextOne == '$$$':
                             self.labelCont += 1
-                            inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont)))
+                            # inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont))
+                            inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont), False, 'DEP SIGUIENTE_SEA'))
 
                         pila.append(nextOne)
 
                     elif nxt == '$$$':
+                        inicio.append(self.add_code_for_latter('', '', '', True, 'ANTERIOR_SEA'))
                         self.labelCont += 1
                         break
                     nxt = pila.pop()
@@ -420,7 +514,6 @@ class SymbolTable:
                     nxt = pila.pop()
                 elif len(pila) == 0:
                     break
-                print(pila)
 
         self.take_everything_to_eje(final)
 
@@ -454,8 +547,8 @@ class SymbolTable:
         else:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
 
-    def add_code_for_latter(self, instruction, firstparam, secondparam):
-        #return Instruction(instruction, firstparam, secondparam, istTag, type_)
+    def add_code_for_latter(self, instruction, firstparam, secondparam, istTag, type_):
+        #self.code.append(Instruction(instruction, firstparam, secondparam, istTag, type_))
         return instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n"
 
     def add_code(self, instruction, firstparam, secondparam):
