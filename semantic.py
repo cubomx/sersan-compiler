@@ -1,4 +1,4 @@
-from symbol import Nodo
+from symbol import Nodo, Instruction
 from collections import deque
 
 
@@ -19,6 +19,9 @@ class SymbolTable:
         self.cont = 1
         self.inner_sentences = deque()
         self.compareTO = ''
+        self.labelCont = 1
+        self.endCycle = None
+        self.endCycleCont = 1
 
     def check_Dependencies(self, subdict):
         string_build = ''
@@ -285,31 +288,41 @@ class SymbolTable:
 
     # LOD --> Load values from the ones existing
 
+    def opr_log(self, nxt):
+        if nxt == 'O':
+            return self.add_code_for_latter('OPR', 0, 15)
+        elif nxt == 'Y':
+            return self.add_code_for_latter('OPR', 0, 16)
+        else:
+            return self.add_code_for_latter('OPR', 0, 17)
+
+    def opr_rel(self, nxt):
+        if nxt == '<':
+            return self.add_code_for_latter('OPR', 0, 9)
+        elif nxt == '>':
+            return self.add_code_for_latter('OPR', 0, 10)
+        elif nxt == '<=':
+            return self.add_code_for_latter('OPR', 0, 11)
+        elif nxt == '>=':
+            return self.add_code_for_latter('OPR', 0, 12)
+        elif nxt == '<>':
+            return self.add_code_for_latter('OPR', 0, 13)
+        elif nxt == '=':
+            return self.add_code_for_latter('OPR', 0, 14)
+
+
     def if_statemen(self, pila):
         not_discard = None
         lista = deque()
+        # First, we add the jump if the condition is false
+        lista.append(self.add_code_for_latter('JMC', 'F', 'E'+str(self.labelCont)))
+        self.labelCont += 1
         while len(pila) > 0:
             nxt = pila.pop()
             if nxt in self.nexos:
-                if nxt == 'Y':
-                    lista.append(self.add_code_for_latter('OPR', 0, 15))
-                elif nxt == 'O':
-                    lista.append(self.add_code_for_latter('OPR', 0, 16))
-                else:
-                    lista.append(self.add_code_for_latter('OPR', 0, 17))
+                lista.append(self.opr_log(nxt))
             elif nxt in self.oprel:
-                if nxt == '<':
-                    lista.append(self.add_code_for_latter('OPR', 0, 9))
-                elif nxt == '>':
-                    lista.append(self.add_code_for_latter('OPR', 0, 10))
-                elif nxt == '<=':
-                    lista.append(self.add_code_for_latter('OPR', 0, 11))
-                elif nxt == '>=':
-                    lista.append(self.add_code_for_latter('OPR', 0, 12))
-                elif nxt == '<>':
-                    lista.append(self.add_code_for_latter('OPR', 0, 13))
-                elif nxt == '=':
-                    lista.append(self.add_code_for_latter('OPR', 0, 14))
+                lista.append(self.opr_rel(nxt))
             elif nxt in self.estatutos:
                 if nxt == 'IMPRNL':
                     not_discard = nxt
@@ -317,7 +330,6 @@ class SymbolTable:
                     pila.append(nxt)
                     if not_discard is not None:
                         pila.append(not_discard)
-
                     return lista
             else:
                 lista.append(self.literalOrValue(nxt))
@@ -357,6 +369,7 @@ class SymbolTable:
         lod_usual = self.add_code_for_latter('LOD', lod_usual, 0)
 
         nxt = pila.pop()
+        previousTag = None
         while len(pila) > 0:
             if nxt == 'OTRO':
                 other = None
@@ -374,7 +387,6 @@ class SymbolTable:
                     final += other
                     continue
             elif nxt == 'SEA':
-                print("hhhhhhhhhhhhhhhhhhhhhhhhhhhh")
                 # Recover all block instruncitons
                 nxt = pila.pop()
                 other = deque()
@@ -382,16 +394,28 @@ class SymbolTable:
                     other += self.returnUntil(self.inner_sentences, '///')
                 nxt = pila.pop()
                 print(nxt)
+                inicio = deque()
                 while len(pila) > 0:
                     print(pila)
                     if '"' in nxt:
-                        other.append(self.add_code_for_latter('OPR', 0, 14))
-                        other.append(self.add_code_for_latter('LIT', nxt, 0))
-                        other.append(lod_usual)
+                        inicio.appendleft(lod_usual)
+                        inicio.appendleft(self.add_code_for_latter('LIT', nxt, 0))
+                        inicio.appendleft(self.add_code_for_latter('OPR', 0, 14))
+
+                        nextOne = pila.pop()
+                        inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont)))
+                        if nextOne == '$$$':
+                            self.labelCont += 1
+                            inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont)))
+
+                        pila.append(nextOne)
+
                     elif nxt == '$$$':
+                        self.labelCont += 1
                         break
                     nxt = pila.pop()
                 final += other
+                final += inicio
                 if len(pila) > 0:
                     nxt = pila.pop()
                 elif len(pila) == 0:
@@ -401,12 +425,25 @@ class SymbolTable:
         self.take_everything_to_eje(final)
 
 
-    def sea_instruction(self, pila):
+    def repetir(self, pila):
         top = pila.pop()
-        cont = 0
         nxt = pila.pop()
-        while len(pila) > 0 or nxt != '$$$':
-            self.add_code('LIT')
+        lista = deque()
+        lista.append(self.add_code_for_latter('JMC', 'F', 'E'+str(self.labelCont)))
+        self.labelCont += 1
+        while len(pila) > 0:
+            if nxt in self.nexos:
+                lista.append(self.opr_log(nxt))
+                nxt = pila.pop()
+            if nxt in self.oprel:
+                lista.append(self.opr_rel(nxt))
+                nxt = pila.pop()
+            else:
+                lista.append(self.literalOrValue(nxt))
+                if len(pila) > 0:
+                    nxt = pila.pop()
+
+        self.take_everything_to_eje(lista)
 
 
     def add_err(self, lex_error, val, line):
@@ -418,6 +455,7 @@ class SymbolTable:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
 
     def add_code_for_latter(self, instruction, firstparam, secondparam):
+        #return Instruction(instruction, firstparam, secondparam, istTag, type_)
         return instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n"
 
     def add_code(self, instruction, firstparam, secondparam):

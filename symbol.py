@@ -18,6 +18,25 @@ class Nodo:
             return chr(self.value)
         return
 
+class Instruction:
+    def __init__(self, op, firstparam, secondparam, isStartBlock, type_):
+        self.op = op
+        self.param_1 = firstparam
+        self.param_2 = secondparam
+        self.pendingTag = False
+
+        if isStartBlock:
+            self.pendingTag = True
+            self.istTag = True
+        self.type = type_
+
+    def changeToLabel(self, type_):
+        if type_ is not None:
+            self.type = type_
+        self.pendingTag = True
+        self.istTag = True
+
+
 
 
 

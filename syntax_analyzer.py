@@ -357,6 +357,8 @@ class Syntax(object):
     def p_repetir(self, p):
         'repetir : REPETIR block HASTA QUE PAREN_EMPIEZA exprlog PAREN_TERMINA'
         print("repetir")
+        self.pila.append('REPETIR')
+        self.symTable_.repetir(self.pila)
 
     def p_mientras(self, p):
         'mientras : MIENTRAS SE CUMPLA QUE exprlog bckesp'
