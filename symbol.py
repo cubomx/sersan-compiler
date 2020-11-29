@@ -26,7 +26,6 @@ class Instruction:
         self.pendingTag = False
         self.istTag = False
         if isStartBlock:
-            self.pendingTag = True
             self.istTag = True
         self.type = type_
 
@@ -35,6 +34,12 @@ class Instruction:
             self.type = type_
         self.pendingTag = True
         self.istTag = True
+
+class PendingTag:
+    def __init__(self, tag, dependency):
+        self.tag = tag
+        self.dependency = dependency
+        self.line = 0
 
 
 

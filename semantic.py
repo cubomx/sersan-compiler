@@ -1,4 +1,4 @@
-from symbol import Nodo, Instruction
+from symbol import Nodo, Instruction, PendingTag
 from collections import deque
 
 
@@ -11,7 +11,8 @@ class SymbolTable:
         self.nexos = ('Y', 'O', 'NO')
         self.oprel = ('<>', '<=', '>=', '<', '>', '=')
         self.dict = dict()
-        self.labels = dict()
+        self.labels = []
+        self.resolvedLabels = []
         self.err_file = file
         self.file_name = filename
         open(self.file_name + ".eje", 'w').close()
@@ -25,8 +26,9 @@ class SymbolTable:
         self.code = deque()
         self.startOfFunction = 1
 
-    def add_positionTag(self, n):
-        return
+    def print_tags(self):
+        for i in self.resolvedLabels:
+            print(i.tag + ',I,I,' + str(i.line) + ',0,#')
 
 
     def programa(self, pila):
@@ -51,14 +53,6 @@ class SymbolTable:
         return string_build
 
 
-    def print_Objects(self):
-        top = self.code.pop()
-        while len(self.code) > 0:
-            if top.istTag:
-                print(top.type)
-            else:
-                print(top.op + ' ' + str(top.param_1) + ' ' + str(top.param_2))
-            top = self.code.pop()
 
     def __str__(self):
         string = ""
@@ -272,10 +266,31 @@ class SymbolTable:
         return
 
     def take_everything_to_eje(self, lista):
+
         while len(lista) > 0:
             el = lista.pop()
-            self.eje.write(str(self.cont) + ' ' + el)
+            if el.istTag:
+                if not el.pendingTag:
+                    tag_ = el.type.split(' ')[1]
+                    self.labels.append(PendingTag(el.param_2, tag_))
+                else:
+                    self.check_tags(el.type, self.cont)
+                self.eje.write(str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n")
+            else:
+                self.eje.write(str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n")
             self.cont += 1
+
+
+
+    def check_tags(self, type_, line):
+        new_label = []
+        for i in self.labels:
+            if i.dependency == type_:
+                i.line = line
+                self.resolvedLabels.append(i)
+            else:
+                new_label.append(i)
+        self.labels = new_label
 
     def literalOrValue(self, value):
         if '"' in value:
@@ -439,7 +454,12 @@ class SymbolTable:
 
         return actual
 
-
+    def addTag(self, pila, tag):
+        top = pila.pop()
+        top.type = tag
+        pila.append(top)
+        top.istTag = True
+        top.pendingTag = True
 
     def cuando(self, pila):
         final = deque()
@@ -450,7 +470,7 @@ class SymbolTable:
         nxt = pila.pop()
         previousTag = None
 
-        final.append(self.add_code_for_latter('', '', '', True, 'FIN_CUANDO'))
+        #final.append(self.add_code_for_latter('', '', '', True, 'FIN_CUANDO'))
         while len(pila) > 0:
             if nxt == 'OTRO':
                 nxtTo = pila.pop()
@@ -468,6 +488,7 @@ class SymbolTable:
                 if len(pila) > 0:
                     nxt = pila.pop()
                 if nxt == 'SEA':
+                    self.addTag(other, 'SIGUIENTE_SEA')
                     final += other
                     continue
             elif nxt == 'SEA':
@@ -475,12 +496,12 @@ class SymbolTable:
                 # Recover all block instruncitons
                 nxt = pila.pop()
                 other = deque()
-                other.append(self.add_code_for_latter('JMP', 0, 'EF'+str(self.endCycleCont), False, 'DEP FIN_CUANDO'))
+                other.append(self.add_code_for_latter('JMP', 0, '_EF'+str(self.endCycleCont), False, 'DEP FIN_CUANDO'))
                 if nxt == 'IMPRNL':
                     other += self.returnUntil(self.inner_sentences, '///')
                 nxt = pila.pop()
                 inicio = deque()
-                other.append(self.add_code_for_latter('', '', '', True, 'INICIO_SEA'))
+                self.addTag(other, 'INICIO_SEA')
                 while len(pila) > 0:
                     print(pila)
                     if '"' in nxt:
@@ -495,16 +516,16 @@ class SymbolTable:
                         nextOne = pila.pop()
 
                         #inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont)))
-                        inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont), False, 'DEP INICIO_SEA'))
+                        inicio.appendleft(self.add_code_for_latter('JMC', 'V', '_E' + str(self.labelCont), True, 'DEP INICIO_SEA'))
                         if nextOne == '$$$':
                             self.labelCont += 1
                             # inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont))
-                            inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont), False, 'DEP SIGUIENTE_SEA'))
+                            inicio.appendleft(self.add_code_for_latter('JMP', 0, '_E' + str(self.labelCont), True, 'DEP SIGUIENTE_SEA'))
 
                         pila.append(nextOne)
 
                     elif nxt == '$$$':
-                        inicio.append(self.add_code_for_latter('', '', '', True, 'ANTERIOR_SEA'))
+                        self.addTag(inicio, 'SIGUIENTE_SEA')
                         self.labelCont += 1
                         break
                     nxt = pila.pop()
@@ -516,6 +537,10 @@ class SymbolTable:
                     break
 
         self.take_everything_to_eje(final)
+        self.add_endTag()
+
+    def add_endTag(self):
+        print('_EF' + str(self.endCycleCont) + ',I' + ',I,' + str(self.cont), '0' + '#')
 
 
     def repetir(self, pila):
@@ -548,8 +573,7 @@ class SymbolTable:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + " in line " + str(line) + "\n")
 
     def add_code_for_latter(self, instruction, firstparam, secondparam, istTag, type_):
-        #self.code.append(Instruction(instruction, firstparam, secondparam, istTag, type_))
-        return instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n"
+        return Instruction(instruction, firstparam, secondparam, istTag, type_)
 
     def add_code(self, instruction, firstparam, secondparam):
         self.eje.write(str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n")
