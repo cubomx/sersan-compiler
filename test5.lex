@@ -87,7 +87,7 @@
 <PUNTO_COMA> : ;
 <IMPRIMENL> : Imprimenl
 <PAREN_EMPIEZA> : (
-<IDENT> : beta
+<IDENT> : Beta
 <PAREN_TERMINA> : )
 <PUNTO_COMA> : ;
 <IMPRIMENL> : Imprimenl

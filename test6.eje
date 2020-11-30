@@ -1,10 +1,4 @@
-PI,C,R,0,0,#,
-MAX,C,E,0,0,#,
-Alfa,V,A,0,0,#,
-Beta,V,A,0,0,#,
-k,V,E,0,0,#,
 opc,V,A,0,0,#,
-Selecciona,P,I,1,0,#,
 _E3,I,I,13,0,#
 _E3,I,I,13,0,#
 _E4,I,I,16,0,#
@@ -12,8 +6,8 @@ _E1,I,I,25,0,#
 _E1,I,I,25,0,#
 _E2,I,I,28,0,#
 @
-1 LIT "Te gustan las matematicas? (S,s), (N, n) ", 0
-2 OPR 0, 20
+1 LIT "PASAMOS?(sS/nN)",0
+2 OPR 0,21
 3 OPR opc, 19
 4 LOD opc,0
 5 LIT "S",0
@@ -24,7 +18,7 @@ _E2,I,I,28,0,#
 10 OPR 0,14
 11 JMC V,_E3
 12 JMP 0,_E4
-13 LIT "Bien, eres un suertudo",0
+13 LIT "Bien :)",0
 14 OPR 0,21
 15 JMP 0,_EF1
 16 LOD opc,0
@@ -36,14 +30,9 @@ _E2,I,I,28,0,#
 22 OPR 0,14
 23 JMC V,_E1
 24 JMP 0,_E2
-25 LIT "A mi tampoco",0
+25 LIT "Oh, baia",0
 26 OPR 0,21
 27 JMP 0,_EF1
-28 LIT "Bien! No caes en esta falsa dicotomia",0
+28 LIT "Lo dejamos a michas",0
 29 OPR 0,21
-30 OPR 0, 1
-31 OPR Alfa, 19
-32 LOD Beta,0
-33 OPR 0,21
-34 LOD k,0
-35 OPR 0,21
+30 OPR 0,0

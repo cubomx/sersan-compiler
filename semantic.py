@@ -4,6 +4,7 @@ from collections import deque
 
 class SymbolTable:
     def __init__(self, file, filename):
+        self.instrucciones = ''
         self.estatutos = ('LIMPIA',
                      'SI', 'DESDE', 'REPETIR', 'MIENTRAS', 'CUANDO', 'REGRESA', 'IMPRIME', 'IMPRIMENL', 'LEE',
                      'INTERRUMPE', 'CONTINUA', 'HACER', 'SINO', 'EL',
@@ -26,9 +27,17 @@ class SymbolTable:
         self.code = deque()
         self.startOfFunction = 1
 
+    def info_to_eje(self):
+        self.eje.write(self.get_table())
+        self.eje.write(self.print_tags())
+        self.eje.write('@\n')
+        self.eje.write(self.instrucciones)
+
     def print_tags(self):
+        string_build = ''
         for i in self.resolvedLabels:
-            print(i.tag + ',I,I,' + str(i.line) + ',0,#')
+            string_build += i.tag + ',I,I,' + str(i.line) + ',0,#'+'\n'
+        return string_build
 
 
     def programa(self, pila):
@@ -38,6 +47,8 @@ class SymbolTable:
         while len(pila) > 0:
             nxt = pila.pop()
             lista += self.statuto(pila, nxt)
+
+        lista.append(self.add_code_for_latter('OPR', 0, 0, False, None))
 
         if len(lista) > 0:
             self.take_everything_to_eje(lista)
@@ -58,6 +69,17 @@ class SymbolTable:
         string = ""
         for key, value in self.dict.items():
             string += key + "," + value.type + "," + value.datatype + "," + str(value.dimens[0]) + "," + str(value.dimens[1]) + ','
+            if value.dependency is not None:
+                string += self.check_Dependencies(value.dependency)
+            string += '#,' + '\n'
+
+        return string
+
+    def get_table(self):
+        string = ""
+        for key, value in self.dict.items():
+            string += key + "," + value.type + "," + value.datatype + "," + str(value.dimens[0]) + "," + str(
+                value.dimens[1]) + ','
             if value.dependency is not None:
                 string += self.check_Dependencies(value.dependency)
             string += '#,' + '\n'
@@ -209,7 +231,7 @@ class SymbolTable:
 
     def var_add(self, pila):
         print(pila)
-        datatype = pila.pop()
+        datatype = self.get_type(pila.pop())
         type_ = 'V'
         new_ = pila.pop()
         if new_ == '###':
@@ -275,9 +297,9 @@ class SymbolTable:
                     self.labels.append(PendingTag(el.param_2, tag_))
                 else:
                     self.check_tags(el.type, self.cont)
-                self.eje.write(str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n")
+                self.instrucciones += str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n"
             else:
-                self.eje.write(str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n")
+                self.instrucciones += str(self.cont) + ' ' + el.op + ' ' + str(el.param_1) + ',' + str(el.param_2) + "\n"
             self.cont += 1
 
 
@@ -564,6 +586,7 @@ class SymbolTable:
         self.take_everything_to_eje(lista)
 
 
+
     def add_err(self, lex_error, val, line):
         if line == -1:
             self.err_file.write("err: " + lex_error + "[" + val + "]" + "\n")
@@ -576,5 +599,5 @@ class SymbolTable:
         return Instruction(instruction, firstparam, secondparam, istTag, type_)
 
     def add_code(self, instruction, firstparam, secondparam):
-        self.eje.write(str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n")
+        self.instrucciones += str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n"
         self.cont += 1

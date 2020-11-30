@@ -22,8 +22,9 @@ Inicio
 Fin de Procedimiento;
 
 Programa
+
    Lee(Alfa);
-   Imprimenl(beta);
+   Imprimenl(Beta);
    Imprimenl(k);
 
 Fin de programa.

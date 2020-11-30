@@ -21,12 +21,12 @@ else:
 
     result = syntax.parser.parse(file_.read())
 
-    print(syntax.symTable_)
-
     print(syntax.pila)
 
 
-syntax.symTable_.eje.close()
+
 syntax.symTable_.print_tags()
+syntax.symTable_.info_to_eje()
+syntax.symTable_.eje.close()
 lex_.close_file()
 
