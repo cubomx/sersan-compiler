@@ -1,4 +1,8 @@
-Variables opc:Alfabetico;
+Constantes a := 2;
+
+Variables opc, beta:Alfabetico;
+
+
 
 Prototipos
 
@@ -6,11 +10,6 @@ Fin de Prototipos;
 
 Programa
   Imprimenl("PASAMOS?(sS/nN)");
-  Lee(opc);
-  Cuando el valor de opc
-  Inicio
-     Sea "S", "s": imprimenl("Bien :)")
-     Sea "N", "n": imprimenl("Oh, baia")
-     Otro: Imprimenl("Lo dejamos a michas")
-  Fin;
+  Lee(beta);
+
 Fin de programa.

@@ -1,61 +1,72 @@
-1 LIT "Dame un numero: ", 0
-2 OPR 0, 20
-3 OPR n, 19
-4 LIT "Factorial R]ecursivo I]nteractivo S]alir: ", 0
-5 OPR 0, 20
-6 OPR opc, 19
-7 LOD opc, 0
-8 LIT "R", 0
-9 OPR 0, 14
-10 JMC V, E4
-11 LOD opc, 0
-12 LIT "r", 0
-13 OPR 0, 14
-14 JMC V, E4
-15 JMP 0, E5
-16 LIT "Factorial Recursivo de ", 0
-17 OPR 0, 20
-18 LOD n, 0
-19 OPR 0, 20
-20 LIT " es= ", 0
-21 OPR 0, 20
-22 LOD n, 0
-23 CAL FacRec, 0
-24 LOD FacRec, 0
-25 OPR 0, 21
-26 LOD opc, 0
-27 LIT "I", 0
-28 OPR 0, 14
-29 JMC V, E2
-30 LOD opc, 0
-31 LIT "i", 0
-32 OPR 0, 14
-33 JMC V, E2
-34 JMP 0, E3
-35 LIT "Factorial Iterativo de ", 0
-36 OPR 0, 20
-37 LOD n, 0
-38 OPR 0, 20
-39 LIT " es= ", 0
-40 OPR 0, 20
-41 LOD n, 0
-42 CAL FacIter, 0
-43 LOD FacIter, 0
-44 OPR 0, 21
-45 LOD opc, 0
-46 LIT "S", 0
-47 OPR 0, 13
-48 LOD opc, 0
-49 LIT "s", 0
-50 OPR 0, 13
-51 OPR 0, 16
-52 JMC F, E1
-53 LIT "Opcion Invalida!!!", 0
-54 OPR 0, 21
-55 LIT "S", 0
-56 OPR 0, 14
-57 LOD opc, 0
-58 LIT "s", 0
-59 OPR 0, 14
-60 OPR 0, 15
-61 JMC F, E5
+PI,C,R,0,0,#,
+MAX,C,E,0,0,#,
+Alfa,V,A,0,0,#,
+Beta,V,A,0,0,#,
+opc,V,A,0,0,#,
+i,V,E,0,0,#,
+j,V,E,0,0,#,
+k,V,E,0,0,#,
+n,V,E,0,0,#,
+_EF1,I,I,7,0,#,
+_E9,I,I,7,0,#,
+_E5,I,I,16,0,#,
+_E6,I,I,16,0,#,
+_E7,I,I,25,0,#,
+_E1,I,I,34,0,#,
+_E2,I,I,34,0,#,
+_E3,I,I,43,0,#,
+_P,I,I,1,0,#,
+@
+1 LIT "Dame un numero: ",0
+2 OPR 0,20
+3 OPR n,19
+4 LIT "Factorial R]ecursivo I]nteractivo S]alir: ",0
+5 OPR 0,21
+6 OPR opc,19
+7 LOD opc,0
+8 LIT "R",0
+9 OPR 0,14
+10 JMC V,_E5
+11 LOD opc,0
+12 LIT "r",0
+13 OPR 0,14
+14 JMC V,_E6
+15 JMP 0,_E7
+16 LIT "Factorial Recursivo de ",0
+17 OPR 0,20
+18 LOD n,0
+19 OPR 0,20
+20 LIT " es= ",0
+21 OPR 0,20
+22 LOD n,0
+23 OPR 0,21
+24 JMP 0,_EF1
+25 LOD opc,0
+26 LIT "I",0
+27 OPR 0,14
+28 JMC V,_E1
+29 LOD opc,0
+30 LIT "i",0
+31 OPR 0,14
+32 JMC V,_E2
+33 JMP 0,_E3
+34 LIT "Factorial Iterativo de ",0
+35 OPR 0,20
+36 LOD n,0
+37 OPR 0,20
+38 LIT " es= ",0
+39 OPR 0,20
+40 LIT "no lo se",0
+41 OPR 0,21
+42 JMP 0,_EF1
+43 LIT "Opcion Invalida!!!",0
+44 OPR 0,21
+45 LOD opc,0
+46 LIT "S",0
+47 OPR 0,14
+48 LOD opc,0
+49 LIT "s",0
+50 OPR 0,14
+51 OPR 0,15
+52 JMC F,_E8
+53 OPR 0,0

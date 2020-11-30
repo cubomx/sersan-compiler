@@ -11,7 +11,7 @@ Fin de Prototipos;
 Procedimiento Selecciona()
 variables opc:alfabetico;
 Inicio
-  Imprime("Te gustan las matematicas? (S,s), (N, n) ");
+  Imprime("Te gustan las matematicas? (S,s), (N, n): ");
   Lee(opc);
   Cuando el valor de opc
   Inicio
@@ -25,6 +25,7 @@ Programa
 
    Lee(Alfa);
    Imprimenl(Beta);
-   Imprimenl(k);
+   Selecciona();
+   Imprimenl(Alfa);
 
 Fin de programa.

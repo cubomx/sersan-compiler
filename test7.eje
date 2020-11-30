@@ -1,10 +1,7 @@
-PI,C,R,0,0,#,
-MAX,C,E,0,0,#,
-Alfa,V,A,0,0,#,
-Beta,V,A,0,0,#,
-k,V,E,0,0,#,
 opc,V,A,0,0,#,
-Selecciona,P,I,1,0,#,
+2,V,A,0,0,#,
+E,V,A,0,0,#,
+a,V,A,0,0,#,
 _E5,I,I,14,0,#,
 _E6,I,I,14,0,#,
 _E7,I,I,17,0,#,
@@ -12,10 +9,10 @@ _E1,I,I,26,0,#,
 _E2,I,I,26,0,#,
 _E3,I,I,29,0,#,
 _EF1,I,I,31,0,#,
-_P,I,I,32,0,#,
+_P,I,I,1,0,#,
 @
 1 LIT "Te gustan las matematicas? (S,s), (N, n): ",0
-2 OPR 0,20
+2 OPR 0,21
 3 OPR opc,19
 4 CUANDO_CICLO ,
 5 LOD opc,0
@@ -44,11 +41,4 @@ _P,I,I,32,0,#,
 28 JMP 0,_EF1
 29 LIT "Bien! No caes en esta falsa dicotomia",0
 30 OPR 0,21
-31 OPR 0,1
-32 OPR Alfa,19
-33 LOD Beta,0
-34 OPR 0,21
-35 OPR 0,0
-36 CAL Selecciona,0
-37 LOD Alfa,0
-38 OPR 0,21
+31 OPR 0,0

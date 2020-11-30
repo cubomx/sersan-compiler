@@ -4,11 +4,13 @@ from collections import deque
 
 class SymbolTable:
     def __init__(self, file, filename):
+        self.pilaInstrucciones = deque()
         self.instrucciones = ''
         self.estatutos = ('LIMPIA',
                      'SI', 'DESDE', 'REPETIR', 'MIENTRAS', 'CUANDO', 'REGRESA', 'IMPRIME', 'IMPRIMENL', 'LEE',
                      'INTERRUMPE', 'CONTINUA', 'HACER', 'SINO', 'EL',
-                     'VALOR', 'QUE', 'SE', 'CUMPLA', 'SEA', 'OTRO', 'IMPRNL')
+                     'VALOR', 'QUE', 'SE', 'CUMPLA', 'SEA', 'OTRO', 'IMPRNL', 'CALL', 'LECTURA')
+        self.ciclosApilados = ('CUANDO_CICLO')
         self.nexos = ('Y', 'O', 'NO')
         self.oprel = ('<>', '<=', '>=', '<', '>', '=')
         self.dict = dict()
@@ -36,17 +38,20 @@ class SymbolTable:
     def print_tags(self):
         string_build = ''
         for i in self.resolvedLabels:
-            string_build += i.tag + ',I,I,' + str(i.line) + ',0,#'+'\n'
+            string_build += i.tag + ',I,I,' + str(i.line) + ',0,#,'+'\n'
         return string_build
 
 
     def programa(self, pila):
         pila.pop()
-        print('_P' + ',I' + ',I' + ',' + str(self.startOfFunction))
+        node = PendingTag('_P', None)
+        node.line = str(self.startOfFunction)
+        self.resolvedLabels.append(node)
         lista = deque()
         while len(pila) > 0:
             nxt = pila.pop()
             lista += self.statuto(pila, nxt)
+            self.deapilate(nxt)
 
         lista.append(self.add_code_for_latter('OPR', 0, 0, False, None))
 
@@ -390,7 +395,12 @@ class SymbolTable:
         ident = pila.pop()
         if self.exists(ident):
             if self.search(ident).type != 'C':
-                self.add_code('OPR', ident, OPCODE)
+                if len(pila) == 0:
+                    self.add_code('OPR', ident, OPCODE)
+                else:
+                    pila.append('LECTURA')
+                    print("hihihhidd")
+                    self.inner_sentences.append(self.add_code_for_latter('OPR', ident, OPCODE, False, None))
             else:
                 self.add_err("Saving input from user to a constant", '', -1)
         else:
@@ -452,6 +462,17 @@ class SymbolTable:
             pila.append(not_discard)
         return lista
 
+    def llamada(self, pila):
+        ident = pila.pop()
+        lista = deque()
+        if self.exists(ident):
+            search = self.search(ident)
+            if search.type == 'F' or search.type == 'P':
+                lista.append(self.add_code_for_latter('CAL', ident, 0, False, None))
+            else:
+                self.add_err('Trying to call a identifier of not function/procedure', ident, -1)
+        return lista
+
     def statuto(self, pila, top):
         lista = deque()
         if top == 'SI':
@@ -460,7 +481,18 @@ class SymbolTable:
             lista = self.limpia()
         if top == 'IMPRNL':
             lista = self.returnUntil(self.inner_sentences, '///')
+        if top == 'CALL':
+            lista = self.llamada(pila)
+        if top == 'LECTURA':
+            lista = self.inner_sentences.pop()
+
         return lista
+
+    def deapilate(self, top):
+        if top in self.ciclosApilados:
+            if len(self.pilaInstrucciones) > 0:
+                self.take_everything_to_eje(self.pilaInstrucciones)
+
 
     def returnUntil(self, accum, char):
         accum.pop()
@@ -506,7 +538,7 @@ class SymbolTable:
                 other = deque()
                 other = self.statuto(pila, nxt)
 
-
+                print(pila)
                 if len(pila) > 0:
                     nxt = pila.pop()
                 if nxt == 'SEA':
@@ -539,11 +571,12 @@ class SymbolTable:
 
                         #inicio.appendleft(self.add_code_for_latter('JMC', 'V', 'E' + str(self.labelCont)))
                         inicio.appendleft(self.add_code_for_latter('JMC', 'V', '_E' + str(self.labelCont), True, 'DEP INICIO_SEA'))
+                        self.labelCont += 1
                         if nextOne == '$$$':
-                            self.labelCont += 1
+
                             # inicio.appendleft(self.add_code_for_latter('JMP', 0, 'E' + str(self.labelCont))
                             inicio.appendleft(self.add_code_for_latter('JMP', 0, '_E' + str(self.labelCont), True, 'DEP SIGUIENTE_SEA'))
-
+                            self.labelCont += 1
                         pila.append(nextOne)
 
                     elif nxt == '$$$':
@@ -558,32 +591,57 @@ class SymbolTable:
                 elif len(pila) == 0:
                     break
 
-        self.take_everything_to_eje(final)
+        if len(self.pilaInstrucciones) == 0:
+            self.pilaInstrucciones = final
+
         self.add_endTag()
 
     def add_endTag(self):
-        print('_EF' + str(self.endCycleCont) + ',I' + ',I,' + str(self.cont), '0' + '#')
+        node = PendingTag('_EF' + str(self.endCycleCont), None)
+        node.line = self.cont
+        self.resolvedLabels.append(node)
 
 
     def repetir(self, pila):
-        top = pila.pop()
-        nxt = pila.pop()
+        print(pila)
+        pila.pop()
+        nxt = None
         lista = deque()
-        lista.append(self.add_code_for_latter('JMC', 'F', 'E'+str(self.labelCont)))
+        lista.appendleft(self.add_code_for_latter('JMC', 'F', '_E'+str(self.labelCont), False, None))
         self.labelCont += 1
+        node = PendingTag('_E'+str(self.labelCont), None)
+        node.line = self.cont
+        self.resolvedLabels.append(node)
+        apiladas = deque()
+        print(pila)
+        self.labelCont += 1
+        other = deque()
         while len(pila) > 0:
-            if nxt in self.nexos:
-                lista.append(self.opr_log(nxt))
-                nxt = pila.pop()
-            if nxt in self.oprel:
-                lista.append(self.opr_rel(nxt))
-                nxt = pila.pop()
-            else:
-                lista.append(self.literalOrValue(nxt))
-                if len(pila) > 0:
-                    nxt = pila.pop()
+            nxt = pila.pop()
+            if nxt in self.statuto(pila, nxt):
+                other += self.statuto(pila, nxt)
+                self.deapilate(nxt)
 
-        self.take_everything_to_eje(lista)
+
+            if nxt in self.nexos:
+                lista.appendleft(self.opr_log(nxt))
+            elif nxt in self.oprel:
+                lista.appendleft(self.opr_rel(nxt))
+            elif nxt in self.estatutos:
+                apiladas += self.statuto(pila, nxt)
+            else:
+                lista.appendleft(self.literalOrValue(nxt))
+
+
+
+        #print(lista)
+        for i in lista:
+            print(i.op + ' ', str(i.param_1) + ' ' + str(i.param_2))
+            self.pilaInstrucciones.appendleft(i)
+
+        self.pilaInstrucciones += other
+
+        self.take_everything_to_eje(self.pilaInstrucciones)
 
 
 
@@ -599,5 +657,5 @@ class SymbolTable:
         return Instruction(instruction, firstparam, secondparam, istTag, type_)
 
     def add_code(self, instruction, firstparam, secondparam):
-        self.instrucciones += str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ', ' + str(secondparam) + "\n"
+        self.instrucciones += str(self.cont) + ' ' + instruction + ' ' + str(firstparam) + ',' + str(secondparam) + "\n"
         self.cont += 1

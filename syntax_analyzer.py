@@ -504,6 +504,7 @@ class Syntax(object):
         'lfunc : IDENT parenemp uparams PAREN_TERMINA'
         print("lfunc")
         self.pila.append(p[1])
+        self.pila.append('CALL')
 
     def p_lfunc_error(self, p):
         'lfunc : IDENT parenemp error PAREN_TERMINA'
@@ -607,6 +608,4 @@ class Syntax(object):
     def print_every(self, p):
         for i in p:
             print(i)
-
-
 

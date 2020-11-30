@@ -1,5 +1,12 @@
+<CONSTANTE> : Constantes
+<IDENT> : a
+<OP-ASIG> : :=
+<CTE-ENTERA> : 2
+<PUNTO_COMA> : ;
 <VARIABLES> : Variables
 <IDENT> : opc
+<COMA> : ,
+<IDENT> : beta
 <PUNTOS_DOBLES> : :
 <TIPO> : Alfabetico
 <PUNTO_COMA> : ;
@@ -16,40 +23,8 @@
 <PUNTO_COMA> : ;
 <LEE> : Lee
 <PAREN_EMPIEZA> : (
-<IDENT> : opc
+<IDENT> : beta
 <PAREN_TERMINA> : )
-<PUNTO_COMA> : ;
-<CUANDO> : Cuando
-<EL> : el
-<VALOR> : valor
-<DE> : de
-<IDENT> : opc
-<INICIO> : Inicio
-<SEA> : Sea
-<CTE-ALFA> : "S"
-<COMA> : ,
-<CTE-ALFA> : "s"
-<PUNTOS_DOBLES> : :
-<IMPRIMENL> : imprimenl
-<PAREN_EMPIEZA> : (
-<CTE-ALFA> : "Bien :)"
-<PAREN_TERMINA> : )
-<SEA> : Sea
-<CTE-ALFA> : "N"
-<COMA> : ,
-<CTE-ALFA> : "n"
-<PUNTOS_DOBLES> : :
-<IMPRIMENL> : imprimenl
-<PAREN_EMPIEZA> : (
-<CTE-ALFA> : "Oh, baia"
-<PAREN_TERMINA> : )
-<OTRO> : Otro
-<PUNTOS_DOBLES> : :
-<IMPRIMENL> : Imprimenl
-<PAREN_EMPIEZA> : (
-<CTE-ALFA> : "Lo dejamos a michas"
-<PAREN_TERMINA> : )
-<FIN> : Fin
 <PUNTO_COMA> : ;
 <FIN> : Fin
 <DE> : de

@@ -1,0 +1,17 @@
+Constantes a := 2;
+Variables opc: Alfabetico;
+
+Prototipos
+
+Fin de Prototipos;
+
+Programa
+Imprimenl("Te gustan las matematicas? (S,s), (N, n): ");
+Lee(opc);
+Cuando el valor de opc
+  Inicio
+     Sea "S", "s": imprimenl("Bien, eres un suertudo")
+     Sea "N", "n": imprimenl("A mi tampoco")
+     Otro: imprimenl("Bien! No caes en esta falsa dicotomia")
+  Fin;
+Fin de programa.

@@ -1,38 +1,11 @@
 opc,V,A,0,0,#,
-_E3,I,I,13,0,#
-_E3,I,I,13,0,#
-_E4,I,I,16,0,#
-_E1,I,I,25,0,#
-_E1,I,I,25,0,#
-_E2,I,I,28,0,#
+beta,V,A,0,0,#,
+2,V,A,0,0,#,
+E,V,A,0,0,#,
+a,V,A,0,0,#,
+_P,I,I,1,0,#,
 @
 1 LIT "PASAMOS?(sS/nN)",0
 2 OPR 0,21
-3 OPR opc, 19
-4 LOD opc,0
-5 LIT "S",0
-6 OPR 0,14
-7 JMC V,_E3
-8 LOD opc,0
-9 LIT "s",0
-10 OPR 0,14
-11 JMC V,_E3
-12 JMP 0,_E4
-13 LIT "Bien :)",0
-14 OPR 0,21
-15 JMP 0,_EF1
-16 LOD opc,0
-17 LIT "N",0
-18 OPR 0,14
-19 JMC V,_E1
-20 LOD opc,0
-21 LIT "n",0
-22 OPR 0,14
-23 JMC V,_E1
-24 JMP 0,_E2
-25 LIT "Oh, baia",0
-26 OPR 0,21
-27 JMP 0,_EF1
-28 LIT "Lo dejamos a michas",0
-29 OPR 0,21
-30 OPR 0,0
+3 OPR beta,19
+4 OPR 0,0
